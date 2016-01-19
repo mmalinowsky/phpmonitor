@@ -7,7 +7,6 @@ class PdoSimple implements DatabaseInterface
 {
     
     private $link = null;
-    private $config;
 
     public function __construct($config)
     {
