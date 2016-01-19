@@ -26,7 +26,7 @@ class Config
 
     public function get($name)
     {
-        if(isset($this->data[$name])) {
+        if (isset($this->data[$name])) {
             return $this->data[$name];
         }
         return null;

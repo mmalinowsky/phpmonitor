@@ -1,17 +1,21 @@
 <?php
 namespace Monitor;
 
+use Database\DatabaseInterface;
+use Notification\Facade;
+use Client\ClientInterface;
+
 class Monitor
 {
     
-    private $config = [];
+    private $config;
     private $servers = [];
     private $serverHistoryStruct = [];
     private $database;
     private $notificationFacade;
     private $client;
 
-    function __construct(Config $config, Database\DatabaseInterface $database, Notification\Facade $notificationFacade)
+    public function __construct(Config $config, DatabaseInterface $database, Facade $notificationFacade)
     {
         $this->config = $config;
         $this->database = $database;
@@ -22,7 +26,7 @@ class Monitor
         DEFINE('DAY_IN_MS', HOUR_IN_MS * 24);
     }
     
-    public function setClient(Client\ClientInterface $client)
+    public function setClient(ClientInterface $client)
     {
         $this->client = $client;
     }
