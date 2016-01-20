@@ -29,6 +29,6 @@ class Config
         if (isset($this->data[$name])) {
             return $this->data[$name];
         }
-        return null;
+        throw new \Exception($name .' not found in Config');
     }
 }
