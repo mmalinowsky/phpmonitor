@@ -35,8 +35,8 @@ class Facade
     public function addNotifications()
     {
         $notificationsData = $this->db->getNotifications();
-        foreach ($notificationsData as $notification) {
-            $this->notificationMgr->addNotification(new Notification($notification));
+        foreach ($notificationsData as $notificationData) {
+            $this->notificationMgr->addNotification(new Notification($notificationData));
         }
     }
 

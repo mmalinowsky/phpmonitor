@@ -6,6 +6,8 @@ use Monitor\Notification\Parser as NotificationParser;
 use Monitor\Notification\Service\ServiceInterface;
 use Monitor\Notification\NotificationMgr;
 use Monitor\Database\DatabaseInterface;
+use Monitor\Notification\Trigger\Comparator\Comparator;
+use Monitor\Notification\Trigger\Comparator\Strategy\Context as StrategyContext;
 
 class Triggers extends Observable
 {
@@ -23,7 +25,7 @@ class Triggers extends Observable
         $this->notificationMgr = $notifcationMgr;
     }
 
-    public function setComparator(Comparator\Comparator $comparator)
+    public function setComparator(Comparator $comparator)
     {
         $this->comparator = $comparator;
     }
@@ -142,7 +144,7 @@ class Triggers extends Observable
     public function shouldTriggerBeFired(Trigger $trigger, array $serverData, array $services)
     {
         $this->checkIsComparatorValid();
-        $strategy = new Comparator\Strategy\Context($trigger->getType());
+        $strategy = new StrategyContext($trigger->getType());
         return $strategy->compare($trigger, $serverData, $services, $this->comparator);
     }
 

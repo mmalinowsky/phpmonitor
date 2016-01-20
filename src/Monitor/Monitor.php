@@ -1,9 +1,9 @@
 <?php
 namespace Monitor;
 
-use Database\DatabaseInterface;
-use Notification\Facade;
-use Client\ClientInterface;
+use Monitor\Database\DatabaseInterface;
+use Monitor\Notification\Facade;
+use Monitor\Client\ClientInterface;
 
 class Monitor
 {
@@ -42,9 +42,11 @@ class Monitor
             $this->servers[$key] = $this->getServerData();
             $this->servers[$key]['server_id'] = $value['id'];
             $this->servers[$key]['hostname'] = $value['name'];
+
             if ($this->servers[$key]['status'] !== 'online') {
                 $this->servers[$key]['status'] = 'offline';
             }
+            
             $this->notificationFacade->checkTriggers($this->servers[$key]);
         }
 

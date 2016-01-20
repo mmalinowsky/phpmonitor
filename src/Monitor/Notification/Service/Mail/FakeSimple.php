@@ -9,7 +9,7 @@ class FakeSimple implements ServiceInterface
 
     public function sendNotification(Notification $notification, $data)
     {
-        echo '[Mail] Send Notification';
+        echo '[Mail] Send Notification - ';
         echo $notification->getMessage().PHP_EOL;
     }
 }
