@@ -56,25 +56,24 @@ class Monitor
 
     private function deleteOldHistoryRecords()
     {
-        $this->database->deleteOldRecords($this->config->get('history_expire_time_in_days') * DAY_IN_MS);
+        $expireTime = $this->config->get('history_expire_time_in_days');
+        $this->database->deleteOldRecords($expireTime * DAY_IN_MS);
     }
 
     /**
-     * Fill array with concret value
+     * Fill array with concret value when can't find same key in $arrayTofill as in $struct array
      *
      * @param array $struct
-     * @param array $data
+     * @param array $arrayToFill
      * @param int $value
-     * @return array $data
+     * @return array $arrayMerged
      */
-    private function fillArrayWithDefaultValue(array $struct, array $data, $value = 0)
+    private function fillArrayWithDefaultValue(array $struct, array $arrayToFill, $value = 0)
     {
-        foreach ($struct as $row) {
-            if (!isset($data[$row])) {
-                $data[$row] = $value;
-            }
-        }
-        return $data;
+        $arrayDiff = array_diff($struct, $arrayToFill);
+        $arrayDiffFilled = array_fill_keys($arrayDiff, $value);
+        $arrayMerged = array_merge($data, $arrayDiffFilled);
+        return $arrayMerged;
     }
     
     /**
