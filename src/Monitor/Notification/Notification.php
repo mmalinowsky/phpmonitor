@@ -5,7 +5,7 @@ class Notification
 {
     
     private $id;
-    private $messageTemplate;
+    private $messageTemplate = '';
     private $message = '';
 
     public function __construct(array $data)

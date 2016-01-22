@@ -5,6 +5,7 @@ use Monitor\Notification\Trigger\Triggers;
 use Monitor\Notification\Trigger\Comparator\Comparator;
 use Monitor\Database\DatabaseInterface;
 use Monitor\Config;
+use Monitor\Notification\Service\Factory as ServiceFactory;
 
 class Facade
 {
@@ -18,7 +19,7 @@ class Facade
         DatabaseInterface &$db,
         NotificationMgr $notificationMgr,
         Triggers $triggers,
-        Service\Factory $serviceFactory
+        ServiceFactory $serviceFactory
     ) {
         $this->db = $db;
         $this->triggers = $triggers;
@@ -36,7 +37,8 @@ class Facade
     {
         $notificationsData = $this->db->getNotifications();
         foreach ($notificationsData as $notificationData) {
-            $this->notificationMgr->addNotification(new Notification($notificationData));
+            $notification = new Notification($notificationData);
+            $this->notificationMgr->addNotification($notification);
         }
     }
 
@@ -44,7 +46,8 @@ class Facade
     {
         foreach ($observers as $observer) {
             try {
-                $this->triggers->addObserver($serviceFactory->getService($observer));
+                $service = $serviceFactory->getService($observer);
+                $this->triggers->addObserver($service);
             } catch (\Exception $e) {
                 $this->triggers->popObserver();
             }
@@ -53,7 +56,8 @@ class Facade
 
     public function addTriggers()
     {
-        $this->triggers->addTriggersByArray($this->db->getNotificationTriggers());
+        $triggersData = $this->db->getNotificationTriggers();
+        $this->triggers->addTriggersByArray($triggersData);
     }
 
     /**
