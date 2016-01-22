@@ -22,8 +22,6 @@ class Monitor
         $this->servers = $this->database->getServersConfig();
         $this->serverHistoryStruct = $this->database->getTableStructure();
         $this->notificationFacade = $notificationFacade;
-        DEFINE('HOUR_IN_MS', 3600);
-        DEFINE('DAY_IN_MS', HOUR_IN_MS * 24);
     }
     
     public function setClient(ClientInterface $client)
@@ -31,27 +29,37 @@ class Monitor
         $this->client = $client;
     }
 
-    public function run()
+    private function checkServer($server)
     {
-        foreach ($this->servers as $key => $value) {
-            $this->client->setQuery(
-                $value['url_path'],
-                ['ping_host' => $value['ping_hostname']]
+        $this->client->setQuery(
+                $server['url_path'],
+                ['ping_host' => $server['ping_hostname']]
             );
 
-            $this->servers[$key] = $this->getServerData();
-            $this->servers[$key]['server_id'] = $value['id'];
-            $this->servers[$key]['hostname'] = $value['name'];
+            $serverData = $this->getServerData(); 
+            $serverData['server_id'] = $server['id'];
+            $serverData['hostname'] = $server['name'];
 
-            if ($this->servers[$key]['status'] !== 'online') {
-                $this->servers[$key]['status'] = 'offline';
+            if ($serverData['status'] !== 'online') {
+                $serverData['status'] = 'offline';
             }
-            
-            $this->notificationFacade->checkTriggers($this->servers[$key]);
-        }
+            $this->notificationFacade->checkTriggers($serverData);
+            return $serverData;
+    }
 
-        $this->database->addServerHistory($this->servers);
+    public function run()
+    {
+        $this->isClientValid();
+        $serversArr = array_map([$this, "checkServer"], $this->servers);
+        $this->database->addServerHistory($serversArr);
         $this->deleteOldHistoryRecords();
+    }
+
+    private function isClientValid()
+    {
+        if( ! $this->client) {
+            throw new \Exception('Client is not valid');
+        }
     }
 
     private function deleteOldHistoryRecords()
@@ -72,7 +80,7 @@ class Monitor
     {
         $arrayDiff = array_diff($struct, $arrayToFill);
         $arrayDiffFilled = array_fill_keys($arrayDiff, $value);
-        $arrayMerged = array_merge($data, $arrayDiffFilled);
+        $arrayMerged = array_merge($arrayDiffFilled, $arrayToFill);
         return $arrayMerged;
     }
     
@@ -100,7 +108,7 @@ class Monitor
     {
         $resources = $this->client->getResources();
 
-        if (!$resources) {
+        if ( ! $resources) {
             $resources = json_encode(
                 array(
                 'status' => 'offline'
