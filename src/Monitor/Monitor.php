@@ -32,17 +32,20 @@ class Monitor
     private function checkServer($server)
     {
         $this->client->setQuery(
-                $server['url_path'],
-                ['ping_host' => $server['ping_hostname']]
-            );
+            $server['url_path'],
+            [
+                'format'    => 'json',
+                'ping_host' => $server['ping_hostname']
+            ]
+        );
 
-            $serverData = $this->getServerData(); 
+            $serverData = $this->getServerData();
             $serverData['server_id'] = $server['id'];
             $serverData['hostname'] = $server['name'];
 
-            if ($serverData['status'] !== 'online') {
-                $serverData['status'] = 'offline';
-            }
+        if ($serverData['status'] !== 'online') {
+            $serverData['status'] = 'offline';
+        }
             $this->notificationFacade->checkTriggers($serverData);
             return $serverData;
     }
@@ -57,7 +60,7 @@ class Monitor
 
     private function isClientValid()
     {
-        if( ! $this->client) {
+        if (! $this->client) {
             throw new \Exception('Client is not valid');
         }
     }
@@ -108,7 +111,7 @@ class Monitor
     {
         $resources = $this->client->getResources();
 
-        if ( ! $resources) {
+        if (! $resources) {
             $resources = json_encode(
                 array(
                 'status' => 'offline'

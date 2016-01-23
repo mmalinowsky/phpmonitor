@@ -29,7 +29,7 @@ class Http implements ClientInterface
      */
     public function setQuery($url, $query)
     {
-        curl_setopt($this->curlHandler, CURLOPT_URL, $url.'get/serverinfo/json/'.$query['ping_host']);
+        curl_setopt($this->curlHandler, CURLOPT_URL, $url.'get/serverinfo/'. $query['format']. '/'. $query['ping_host']);
         $this->query = http_build_query($query);
     }
 
