@@ -9,7 +9,7 @@ class Monitor
 {
     
     private $config;
-    private $servers = [];
+    private $serversConfig = [];
     private $serverHistoryStruct = [];
     private $database;
     private $notificationFacade;
@@ -19,7 +19,7 @@ class Monitor
     {
         $this->config = $config;
         $this->database = $database;
-        $this->servers = $this->database->getServersConfig();
+        $this->serversConfig = $this->database->getServersConfig();
         $this->serverHistoryStruct = $this->database->getTableStructure();
         $this->notificationFacade = $notificationFacade;
     }
@@ -29,19 +29,19 @@ class Monitor
         $this->client = $client;
     }
 
-    private function checkServer($server)
+    private function checkServer($serverConfig)
     {
         $this->client->setQuery(
-            $server['url_path'],
+            $serverConfig['url_path'],
             [
                 'format'    => 'json',
-                'ping_host' => $server['ping_hostname']
+                'ping_host' => $serverConfig['ping_hostname']
             ]
         );
 
             $serverData = $this->getServerData();
-            $serverData['server_id'] = $server['id'];
-            $serverData['hostname'] = $server['name'];
+            $serverData['server_id'] = $serverConfig['id'];
+            $serverData['hostname'] = $serverConfig['name'];
 
         if ($serverData['status'] !== 'online') {
             $serverData['status'] = 'offline';
@@ -53,8 +53,8 @@ class Monitor
     public function run()
     {
         $this->isClientValid();
-        $serversArr = array_map([$this, "checkServer"], $this->servers);
-        $this->database->addServerHistory($serversArr);
+        $serversData = array_map([$this, "checkServer"], $this->serversConfig);
+        $this->database->addServerHistory($serversData);
         $this->deleteOldHistoryRecords();
     }
 
