@@ -37,5 +37,5 @@ $monitor = new Monitor(
     )
 );
 
-$monitor->setClient(new Client\Http);
+$monitor->setClient(new Client\Http\Http);
 $monitor->run();

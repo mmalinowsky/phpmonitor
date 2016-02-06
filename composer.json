@@ -4,11 +4,8 @@
 		"squizlabs/php_codesniffer": "2.*",
 		"phpmd/phpmd": "2.*"
 	},
-	"require": {
-		"morrisonlevi/ardent" : "0.2.*"
-	},
 	"autoload": {
-        	"files": ["./src/Monitor/Utils/Utils.php"],
+        "files": ["./src/Monitor/Utils/Utils.php"],
 	    "psr-0": { "Monitor":"src/" }
 	}
 }

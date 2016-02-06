@@ -18,6 +18,7 @@ class Notification
     {
         return $this->id;
     }
+    
     public function getMessageTemplate()
     {
         return $this->messageTemplate;
