@@ -16,7 +16,11 @@ class MonitorTest extends \PHPUnit_Framework_TestCase
                                          ->setMockClassName('Facade')
                                          ->disableOriginalConstructor()
                                          ->getMock();
-        $this->monitor = new Monitor($this->config, $this->db, $this->notificationFacade);
+        $this->format = $this->getMockBuilder('\Monitor\Format\FormatInterface')
+                                        ->setMockClassName('FormatInterface')
+                                        ->disableOriginalConstructor()
+                                        ->getMock();
+        $this->monitor = new Monitor($this->config, $this->db, $this->notificationFacade, $this->format);
         $this->struct = ['one', 'test2'];
         $this->arrayToFill = ['one' => 1, 'two' => 2, 'test' => 5];
     }

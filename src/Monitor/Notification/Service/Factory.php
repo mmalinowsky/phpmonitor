@@ -8,7 +8,7 @@ class Factory
     {
         $className = __NAMESPACE__.'\\'.$className;
         if (!class_exists($className)) {
-            throw new \Exception($className.'Service class not found');
+            throw new \Exception($className.' Service class not found');
         }
         return new $className;
     }

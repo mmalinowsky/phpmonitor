@@ -21,10 +21,11 @@ $db = new Database\PdoSimple(
         $config->get('dbdriver')
     ]
 );
-
+$formatFactory = new Format\Factory;
 $notificationMgr = new Notification\NotificationMgr(new Notification\Parser);
 $triggers = new Notification\Trigger\Triggers($notificationMgr);
 $triggers->setComparator(new Notification\Trigger\Comparator\Comparator);
+$format = $formatFactory->build($config->get('format'));
 $monitor = new Monitor(
     $config,
     $db,
@@ -34,7 +35,8 @@ $monitor = new Monitor(
         $notificationMgr,
         $triggers,
         new Notification\Service\Factory
-    )
+    ),
+    $format
 );
 
 $monitor->setClient(new Client\Http\Http);

@@ -4,6 +4,7 @@ namespace Monitor;
 use Monitor\Database\DatabaseInterface;
 use Monitor\Notification\Facade;
 use Monitor\Client\ClientInterface;
+use Monitor\Format\FormatInterface;
 
 class Monitor
 {
@@ -14,14 +15,20 @@ class Monitor
     private $database;
     private $notificationFacade;
     private $client;
+    private $format;
 
-    public function __construct(Config $config, DatabaseInterface $database, Facade $notificationFacade)
-    {
+    public function __construct(
+        Config $config,
+        DatabaseInterface $database,
+        Facade $notificationFacade,
+        FormatInterface $format
+    ) {
         $this->config = $config;
         $this->database = $database;
         $this->serversConfig = $this->database->getServersConfig();
         $this->serverHistoryStruct = $this->database->getTableStructure();
         $this->notificationFacade = $notificationFacade;
+        $this->format = $format;
     }
     
     public function setClient(ClientInterface $client)
@@ -34,7 +41,7 @@ class Monitor
         $this->client->setQuery(
             $serverConfig['url_path'],
             [
-                'format'    => 'json',
+                'format'    => $this->config->get('format'),
                 'ping_host' => $serverConfig['ping_hostname']
             ]
         );
@@ -86,21 +93,6 @@ class Monitor
         $arrayMerged = array_merge($arrayDiffFilled, $arrayToFill);
         return $arrayMerged;
     }
-    
-    /**
-     * Decode resources to array
-     *
-     * @param string $undecodedData
-     * @return array $data
-     */
-    private function decodeData($undecodedData)
-    {
-        $data = json_decode($undecodedData, true);
-        if (!is_array($data)) {
-            $data = array();
-        }
-        return $data;
-    }
 
     /**
      * Get server data
@@ -118,7 +110,7 @@ class Monitor
                 )
             );
         }
-        $decodedData = $this->decodeData($resources);
+        $decodedData = $this->format->convertToArray($resources);
         $serverData = $this->fillArrayWithDefaultValue($this->serverHistoryStruct, $decodedData);
         return $serverData;
     }

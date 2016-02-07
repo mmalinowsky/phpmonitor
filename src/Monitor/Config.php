@@ -9,7 +9,10 @@ class Config
     {
         //notification services
         $this->data['notification'] = [
-            'data'     => ['mail_to' => 'admin@localhost'],
+            'data' =>
+                [
+                    'mail_to' => 'admin@localhost'
+                ],
             'services' =>
                 [
                     'Mail\FakeSimple',
@@ -21,6 +24,8 @@ class Config
         $this->data['notification_delay_in_hours'] = 1;
         //time (in days) after server history old records will be deleted
         $this->data['history_expire_time_in_days'] = 7;
+
+        $this->data['format'] = 'json';
 
         $this->data['hostname'] = 'localhost';
         $this->data['username'] = '';
