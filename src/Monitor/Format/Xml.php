@@ -13,7 +13,7 @@ class Xml implements FormatInterface
     public function convertToArray($data)
     {
         $xml = @simplexml_load_string($data);
-        $array = json_decode(json_encode((array)$xml), true);
+        $array = json_decode(json_encode((array) $xml), true);
         if (!is_array($array)) {
             $array = array();
         }

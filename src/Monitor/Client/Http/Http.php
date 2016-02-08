@@ -29,8 +29,24 @@ class Http implements ClientInterface
      */
     public function setQuery($url, $query)
     {
-        curl_setopt($this->curlHandler, CURLOPT_URL, $url.'serverinfo/'. $query['format']. '/'. $query['ping_host']);
+        $url = $url.'serverinfo';
+        $fullPath = $this->fullPath($url, $query);
+        curl_setopt($this->curlHandler, CURLOPT_URL, $fullPath);
         $this->query = http_build_query($query);
+    }
+
+    /**
+     * Making full url path
+     *
+     * @access private
+     * @param $url
+     * @param query
+     * @return $url
+     */
+    private function fullPath($url, $query)
+    {
+        $fullPath = $url.implode('/', $query);
+        return $fullPath;
     }
 
     /**
