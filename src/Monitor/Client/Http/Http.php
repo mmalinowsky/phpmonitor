@@ -29,7 +29,7 @@ class Http implements ClientInterface
      */
     public function setQuery($url, $query)
     {
-        $url = $url.'serverinfo';
+        $url = $url.'serverinfo/';
         $fullPath = $this->fullPath($url, $query);
         curl_setopt($this->curlHandler, CURLOPT_URL, $fullPath);
         $this->query = http_build_query($query);
@@ -39,8 +39,8 @@ class Http implements ClientInterface
      * Making full url path
      *
      * @access private
-     * @param $url
-     * @param query
+     * @param string $url
+     * @param array $query
      * @return $fullPath
      */
     private function fullPath($url, $query)

@@ -10,7 +10,8 @@ if (isset($_SERVER['REMOTE_ADDR'])) {
 DEFINE('HOUR_IN_MS', 3600);
 DEFINE('DAY_IN_MS', HOUR_IN_MS * 24);
 
-$config = new Config;
+$config = new Config\ConfigJson;
+$config->loadFromFile('Config.json');
 
 $db = new Database\PdoSimple(
     [

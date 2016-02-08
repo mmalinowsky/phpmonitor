@@ -4,7 +4,7 @@ namespace Monitor\Notification;
 use Monitor\Notification\Trigger\Triggers;
 use Monitor\Notification\Trigger\Comparator\Comparator;
 use Monitor\Database\DatabaseInterface;
-use Monitor\Config;
+use Monitor\Config\ConfigInterface;
 use Monitor\Notification\Service\Factory as ServiceFactory;
 
 class Facade
@@ -15,7 +15,7 @@ class Facade
     private $db;
 
     public function __construct(
-        Config $config,
+        ConfigInterface $config,
         DatabaseInterface &$db,
         NotificationMgr $notificationMgr,
         Triggers $triggers,

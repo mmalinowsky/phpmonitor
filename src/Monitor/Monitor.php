@@ -5,6 +5,7 @@ use Monitor\Database\DatabaseInterface;
 use Monitor\Notification\Facade;
 use Monitor\Client\ClientInterface;
 use Monitor\Format\FormatInterface;
+use Monitor\Config\ConfigInterface;
 
 class Monitor
 {
@@ -18,7 +19,7 @@ class Monitor
     private $format;
 
     public function __construct(
-        Config $config,
+        ConfigInterface $config,
         DatabaseInterface $database,
         Facade $notificationFacade,
         FormatInterface $format
