@@ -5,7 +5,7 @@ class MonitorTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->config = $this->getMockBuilder('\Monitor\Config')
+        $this->config = $this->getMockBuilder('\Monitor\Config\ConfigJson')
                              ->setMockClassName('Config')
                              ->getMock();
         $this->db = $this->getMockBuilder('\Monitor\Database\PdoSimple')

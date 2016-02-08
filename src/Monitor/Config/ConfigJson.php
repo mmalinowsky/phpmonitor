@@ -19,7 +19,7 @@ class ConfigJson implements ConfigInterface
         if (isset($this->data[$name])) {
             return $this->data[$name];
         }
-        throw new \Exception($name .' not found in Config');
+        throw new \Exception($name.' not found in Config');
     }
 
     private function getFullPath($filename)
@@ -28,18 +28,28 @@ class ConfigJson implements ConfigInterface
         return $fullPath;
     }
 
+    /**
+     * Decode json string to array
+     *
+     * @param $data
+     * @return array $decodedData
+     */
     private function decode($data)
     {
         $decodedData = json_decode($data, true);
-        if(json_last_error() !== JSON_ERROR_NONE) {
+        if (json_last_error() !== JSON_ERROR_NONE) {
             throw new \Exception('Can\'t parse config');
         }
-        return $decodedData;
+        return (array)$decodedData;
     }
 
+    /**
+     *
+     * @param fullPath
+     */
     private function isFileReadable($fullPath)
     {
-        if(!is_readable($fullPath)) {
+        if (!is_readable($fullPath)) {
             throw new \Exception('config is not readable');
         }
     }
