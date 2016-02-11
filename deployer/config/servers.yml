@@ -1,0 +1,15 @@
+server_1:
+    host:
+    user:
+    identity_file:
+        public_key: "~/id_rsa.pub"
+        private_key: "~/id_rsa"
+        password: ""
+    stage:         production
+    deploy_path:   "/var/www/"
+    branch:        master
+    db:
+        host: ""
+        username: ""
+        password: ""
+        name: ""
