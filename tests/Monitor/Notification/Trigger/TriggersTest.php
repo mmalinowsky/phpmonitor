@@ -5,13 +5,22 @@ class TriggersTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $notificationMgr = $this->getMockBuilder('Monitor\Notification\NotificationMgr')->disableOriginalConstructor()->getMock();
+        $notificationMgr = $this->getMockBuilder('Monitor\Notification\NotificationMgr')
+            ->disableOriginalConstructor()
+            ->getMock();
         $this->triggers = new Triggers($notificationMgr);
         $this->comparator = new Comparator\Comparator;
         $this->triggers->setComparator($this->comparator);
-        $this->services = array(
-            'load' => array('name' => 'Load', 'sub' => 'Cpu load', 'percentages' => true, 'dbcolumns' => 'sys_load:cpu_cores', 'resize' => false)
-        );
+        $this->services = [
+            'load' => 
+            [
+                'name' => 'Load',
+                'sub' => 'Cpu load',
+                'percentages' => true,
+                'dbcolumns' => 'sys_load:cpu_cores',
+                'resize' => false
+            ]
+        ];
     }
 
     private function prepareTriggerData($operator, $value, $serviceName, $type = 'service')

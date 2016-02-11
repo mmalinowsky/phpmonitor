@@ -180,9 +180,9 @@ class Triggers extends Observable
 
         $this->db->logTrigger(
             [
-            'id'        => $trigger->getId(),
-            'serverId'  => $serverData['server_id'],
-            'message'   => $notification->getMessage()
+                'id'        => $trigger->getId(),
+                'serverId'  => $serverData['server_id'],
+                'message'   => $notification->getMessage()
             ]
         );
         return true;
