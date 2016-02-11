@@ -9,7 +9,6 @@ class ConfigJson implements ConfigInterface
     {
         $fullPath = $this->getFullPath($filename);
         $this->isFileReadable($fullPath);
-
         $configData = file_get_contents($fullPath);
         $this->data = $this->decode($configData);
     }
@@ -24,7 +23,7 @@ class ConfigJson implements ConfigInterface
 
     private function getFullPath($filename)
     {
-        $fullPath = __DIR__.'/'.$filename;
+        $fullPath = __DIR__.'/../'.$filename;
         return $fullPath;
     }
 
@@ -40,7 +39,7 @@ class ConfigJson implements ConfigInterface
         if (json_last_error() !== JSON_ERROR_NONE) {
             throw new \Exception('Can\'t parse config');
         }
-        return (array)$decodedData;
+        return (array) $decodedData;
     }
 
     /**
