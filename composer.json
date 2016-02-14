@@ -1,4 +1,11 @@
 {
+    "name": "phaniso/monitor",
+    "description": "server monitor",
+    "keywords": [
+        "monitor",
+        "server"
+    ],
+    "homepage": "https://phpmonitor.org",
     "license": "GPL-2.0",
     "authors": [
         {
