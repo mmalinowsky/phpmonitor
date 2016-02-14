@@ -2,6 +2,7 @@
 namespace Monitor\Notification\Trigger\Comparator\Strategy;
 
 use Monitor\Notification\Trigger\Trigger;
+use Monitor\Notification\Trigger\Comparator\Comparator;
 
 class Context
 {
@@ -19,7 +20,7 @@ class Context
         }
     }
 
-    public function compare($trigger, array $serverData, $service, $comparator)
+    public function compare(Trigger $trigger, array $serverData, $service, Comparator $comparator)
     {
         return $this->strategy->compare($trigger, $serverData, $service, $comparator);
     }

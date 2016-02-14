@@ -4,7 +4,7 @@ namespace Monitor;
 require __DIR__.'/../../vendor/autoload.php';
 
 if (isset($_SERVER['REMOTE_ADDR'])) {
-    die('Can\'t run monitor directly by web browser, please set crontab.');
+    throw new \Exception('Can\'t run monitor directly by web browser, please set crontab.');
 }
 
 DEFINE('HOUR_IN_MS', 3600);

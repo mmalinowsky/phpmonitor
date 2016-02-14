@@ -15,7 +15,7 @@ class Xml implements FormatInterface
         $xml = @simplexml_load_string($data);
         $array = json_decode(json_encode((array) $xml), true);
         if (!is_array($array)) {
-            $array = array();
+            $array = [];
         }
         return $array;
     }

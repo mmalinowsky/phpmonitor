@@ -7,7 +7,11 @@ class XmlTest extends \PHPUnit_Framework_TestCase
     {
         $this->rawData = '<?xml version="1.0"?>
         <root>
-        <status>online</status><hostname>laptop</hostname><sys_load>0.21</sys_load><cpu_cores>4</cpu_cores><disk_free>53989769216</disk_free>
+            <status>online</status>
+            <hostname>laptop</hostname>
+            <sys_load>0.21</sys_load>
+            <cpu_cores>4</cpu_cores>
+            <disk_free>53989769216</disk_free>
         </root>';
     }
 

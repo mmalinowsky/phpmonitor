@@ -2,7 +2,6 @@
 namespace Monitor\Notification;
 
 use Monitor\Notification\Trigger\Triggers;
-use Monitor\Notification\Trigger\Comparator\Comparator;
 use Monitor\Database\DatabaseInterface;
 use Monitor\Config\ConfigInterface;
 use Monitor\Notification\Service\Factory as ServiceFactory;
@@ -42,7 +41,7 @@ class Facade
         }
     }
 
-    private function addObservers($observers, $serviceFactory)
+    private function addObservers($observers, ServiceFactory $serviceFactory)
     {
         foreach ($observers as $observer) {
             try {

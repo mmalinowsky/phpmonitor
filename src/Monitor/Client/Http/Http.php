@@ -7,7 +7,6 @@ class Http implements ClientInterface
 {
     
     private $curlHandler;
-    private $query;
     private $timeout;
 
     public function __construct()
@@ -32,7 +31,6 @@ class Http implements ClientInterface
         $url = $url.'serverinfo/';
         $fullPath = $this->fullPath($url, $query);
         curl_setopt($this->curlHandler, CURLOPT_URL, $fullPath);
-        $this->query = http_build_query($query);
     }
 
     /**

@@ -14,7 +14,7 @@ class Json implements FormatInterface
     {
         $array = json_decode($data, true);
         if (!is_array($array)) {
-            $array = array();
+            $array = [];
         }
         return $array;
     }
