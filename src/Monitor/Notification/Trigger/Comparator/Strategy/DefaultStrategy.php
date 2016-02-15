@@ -3,11 +3,12 @@ namespace Monitor\Notification\Trigger\Comparator\Strategy;
 
 use Monitor\Notification\Trigger\Trigger;
 use Monitor\Notification\Trigger\Comparator\ComparatorInterface;
+use Monitor\Utils\PercentageHelper;
 
 class DefaultStrategy implements StrategyInterface
 {
 
-    public function compare(Trigger $trigger, array $serverData, array $services, ComparatorInterface $comparator)
+    public function compare(Trigger $trigger, array $serverData, array $services, PercentageHelper $percentageHelper, ComparatorInterface $comparator)
     {
         if (! isset($serverData[$trigger->getServiceName()])) {
             return false;

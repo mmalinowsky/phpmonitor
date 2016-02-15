@@ -24,7 +24,7 @@ $db = new Database\PdoSimple(
 );
 $formatFactory = new Format\Factory;
 $notificationMgr = new Notification\NotificationMgr(new Notification\Parser);
-$triggers = new Notification\Trigger\Triggers($notificationMgr);
+$triggers = new Notification\Trigger\Triggers($notificationMgr, new Utils\PercentageHelper);
 $triggers->setComparator(new Notification\Trigger\Comparator\Comparator);
 $format = $formatFactory->build($config->get('format'));
 $monitor = new Monitor(

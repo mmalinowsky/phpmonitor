@@ -1,6 +1,8 @@
 <?php
 namespace Monitor\Notification\Trigger;
 
+use Monitor\Utils\PercentageHelper;
+
 class TriggersTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
@@ -8,7 +10,7 @@ class TriggersTest extends \PHPUnit_Framework_TestCase
         $notificationMgr = $this->getMockBuilder('Monitor\Notification\NotificationMgr')
             ->disableOriginalConstructor()
             ->getMock();
-        $this->triggers = new Triggers($notificationMgr);
+        $this->triggers = new Triggers($notificationMgr, new PercentageHelper);
         $this->comparator = new Comparator\Comparator;
         $this->triggers->setComparator($this->comparator);
         $this->services = [

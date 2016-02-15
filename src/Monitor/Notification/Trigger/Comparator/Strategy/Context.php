@@ -3,6 +3,7 @@ namespace Monitor\Notification\Trigger\Comparator\Strategy;
 
 use Monitor\Notification\Trigger\Trigger;
 use Monitor\Notification\Trigger\Comparator\Comparator;
+use Monitor\Utils\PercentageHelper;
 
 class Context
 {
@@ -20,9 +21,9 @@ class Context
         }
     }
 
-    public function compare(Trigger $trigger, array $serverData, $service, Comparator $comparator)
+    public function compare(Trigger $trigger, array $serverData, $service, PercentageHelper $percentageHelper, Comparator $comparator)
     {
-        return $this->strategy->compare($trigger, $serverData, $service, $comparator);
+        return $this->strategy->compare($trigger, $serverData, $service, $percentageHelper, $comparator);
     }
 
     public function getStrategy()

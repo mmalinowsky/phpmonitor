@@ -8,6 +8,7 @@ use Monitor\Notification\NotificationMgr;
 use Monitor\Database\DatabaseInterface;
 use Monitor\Notification\Trigger\Comparator\Comparator;
 use Monitor\Notification\Trigger\Comparator\Strategy\Context as StrategyContext;
+use Monitor\Utils\PercentageHelper;
 
 class Triggers extends Observable
 {
@@ -18,11 +19,13 @@ class Triggers extends Observable
     private $db;
     private $notificationData;
     private $notificationMgr;
+    private $percentageHelper;
 
-    public function __construct(NotificationMgr $notifcationMgr)
+    public function __construct(NotificationMgr $notifcationMgr, PercentageHelper $percentageHelper)
     {
         $this->notificationDelay = 0;
         $this->notificationMgr = $notifcationMgr;
+        $this->percentageHelper = $percentageHelper;
     }
 
     public function setComparator(Comparator $comparator)
@@ -145,7 +148,7 @@ class Triggers extends Observable
     {
         $this->checkIsComparatorValid();
         $strategy = new StrategyContext($trigger->getType());
-        return $strategy->compare($trigger, $serverData, $services, $this->comparator);
+        return $strategy->compare($trigger, $serverData, $services, $this->percentageHelper, $this->comparator);
     }
 
     /**

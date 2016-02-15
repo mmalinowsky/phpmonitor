@@ -25,7 +25,6 @@
 		"deployphp/recipes": "~3.0"
 	},
 	"autoload": {
-        "files": ["./src/Monitor/Utils/Utils.php"],
 	    "psr-0": { "Monitor":"src/" }
 	}
 }
