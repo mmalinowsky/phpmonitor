@@ -53,7 +53,7 @@ class PdoSimple implements DatabaseInterface
 
     public function getServices()
     {
-        $query = "SELECT name, sub, percentages, dbcolumns FROM services";
+        $query = "SELECT service_key, name, percentages, dbcolumns FROM services";
         $st = $this->link->prepare($query);
         $st->execute();
         return $st->fetchAll(PDO::FETCH_GROUP|PDO::FETCH_UNIQUE);

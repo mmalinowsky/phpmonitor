@@ -15,7 +15,7 @@ class Trigger
     public function __construct($data)
     {
         if (!is_array($data)) {
-            return;
+            throw new \Exception('Trigger data provider must be an array');
         }
         
         $this->id = $data['id'];
@@ -34,9 +34,10 @@ class Trigger
     public function toArray()
     {
         return [
-            'triggerValue' => $this->value,
-            'serviceName' => $this->serviceName,
-            'operator' => $this->operator
+            'triggerName'   => $this->name,
+            'triggerValue'  => $this->value,
+            'serviceName'   => $this->serviceName,
+            'operator'      => $this->operator
         ];
     }
     
