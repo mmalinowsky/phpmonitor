@@ -54,7 +54,7 @@ class Monitor
         if ($serverData['status'] !== 'online') {
             $serverData['status'] = 'offline';
         }
-            $this->notificationFacade->checkTriggers($serverData);
+            $this->notificationFacade->checkTriggers($serverData, $this->config->get('ms_in_hour'));
             return $serverData;
     }
 
@@ -76,7 +76,7 @@ class Monitor
     private function deleteOldHistoryRecords()
     {
         $expireTime = $this->config->get('history_expire_time_in_days');
-        $this->database->deleteOldRecords($expireTime * DAY_IN_MS);
+        $this->database->deleteOldRecords($expireTime * $this->config->get('ms_in_day'));
     }
 
     /**

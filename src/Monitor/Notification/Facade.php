@@ -64,8 +64,8 @@ class Facade
      *
      * @param array $serverData
      */
-    public function checkTriggers(array $serverData)
+    public function checkTriggers(array $serverData, $msInHour)
     {
-        $this->triggers->checkTriggers($serverData, $this->services);
+        $this->triggers->checkTriggers($serverData, $this->services, $msInHour);
     }
 }

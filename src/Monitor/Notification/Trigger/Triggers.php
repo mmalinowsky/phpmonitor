@@ -111,10 +111,10 @@ class Triggers extends Observable
      * @param  int $serverId
      * @return boolean
      */
-    private function hasNotificationDelayExpired($triggerId, $serverId)
+    private function hasNotificationDelayExpired($triggerId, $serverId, $msDelay)
     {
         $timeDiff = $this->db->getLastTriggerTime($triggerId, $serverId) - time();
-        return ($this->notificationDelay * HOUR_IN_MS + $timeDiff >= 0) ? false : true;
+        return ($this->notificationDelay * $msDelay + $timeDiff >= 0) ? false : true;
     }
 
     /**
@@ -124,11 +124,11 @@ class Triggers extends Observable
      * @param  array $serverData
      * @param  array $services
      */
-    public function checkTriggers(array $serverData, array $services)
+    public function checkTriggers(array $serverData, array $services, $msDelay)
     {
         foreach ($this->triggers as $trigger) {
             if ($this->shouldTriggerBeFired($trigger, $serverData, $services)) {
-                $this->fireTrigger($trigger, $serverData);
+                $this->fireTrigger($trigger, $serverData, $msDelay);
             }
         }
     }
@@ -170,9 +170,13 @@ class Triggers extends Observable
      * @param  array   $serverData
      * @return boolean
      */
-    private function fireTrigger(Trigger $trigger, array $serverData)
+    private function fireTrigger(Trigger $trigger, array $serverData, $msDelay)
     {
-        if (! $this->hasNotificationDelayExpired($trigger->getId(), $serverData['server_id'])) {
+        if (! $this->hasNotificationDelayExpired(
+                $trigger->getId(),
+                $serverData['server_id'],
+                $msDelay
+            )) {
             return false;
         }
 

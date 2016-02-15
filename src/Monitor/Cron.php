@@ -7,9 +7,6 @@ if (isset($_SERVER['REMOTE_ADDR'])) {
     throw new \Exception('Can\'t run monitor directly by web browser, please set crontab.');
 }
 
-DEFINE('HOUR_IN_MS', 3600);
-DEFINE('DAY_IN_MS', HOUR_IN_MS * 24);
-
 $config = new Config\ConfigJson;
 $config->loadFromFile('Config.json');
 
