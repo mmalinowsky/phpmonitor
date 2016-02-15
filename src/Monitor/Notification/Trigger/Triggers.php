@@ -2,8 +2,6 @@
 namespace Monitor\Notification\Trigger;
 
 use Monitor\Notification\Notification as Notification;
-use Monitor\Notification\Parser as NotificationParser;
-use Monitor\Notification\Service\ServiceInterface;
 use Monitor\Notification\NotificationMgr;
 use Monitor\Database\DatabaseInterface;
 use Monitor\Notification\Trigger\Comparator\Comparator;
