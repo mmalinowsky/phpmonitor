@@ -18,5 +18,8 @@
     "username" : "{{db.username}}",
     "password" : "{{db.password}}",
     "database" : "{{db.name}}",
-    "dbdriver" : "mysql"
+    "dbdriver" : "mysql",
+
+    "ms_in_hour": 3600,
+    "ms_in_day": 86400
 }
