@@ -1,16 +1,20 @@
 <?php
 namespace Monitor\Notification;
 
+use Monitor\Model\Notification;
+
 class NotificationMgr
 {
     private $notifications = [];
     private $notificationParser;
     private $notificationData;
     private $observers;
+    private $repository;
     
-    public function __construct(Parser $notificationParser)
+    public function __construct(Parser $notificationParser, $repository)
     {
         $this->notificationParser = $notificationParser;
+        $this->repository = $repository;
     }
 
     public function setNotificationData($data)
@@ -18,19 +22,10 @@ class NotificationMgr
         $this->notificationData = $data;
     }
 
-    public function addNotification(Notification $notification)
-    {
-        $this->notifications[] = $notification;
-    }
-
     public function getNotificationById($id)
     {
-        foreach ($this->notifications as $notification) {
-            if ($notification->getId() == $id) {
-                return $notification;
-            }
-        }
-        return null;
+        $notification = $this->repository->find($id);
+        return $notification;
     }
 
     public function parseNotification(Notification $notification, $data)

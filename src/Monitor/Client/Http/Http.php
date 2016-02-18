@@ -39,7 +39,7 @@ class Http implements ClientInterface
      * @access private
      * @param string $url
      * @param array $query
-     * @return $fullPath
+     * @return string $fullPath
      */
     private function fullPath($url, $query)
     {

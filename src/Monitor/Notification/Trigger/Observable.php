@@ -2,7 +2,7 @@
 namespace Monitor\Notification\Trigger;
 
 use Monitor\Notification\Service\ServiceInterface;
-use Monitor\Notification\Notification;
+use Monitor\Model\Notification;
 
 abstract class Observable
 {

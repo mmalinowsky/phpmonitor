@@ -43,28 +43,23 @@ class PdoSimple implements DatabaseInterface
         return $st->fetchAll(PDO::FETCH_COLUMN);
     }
 
-    public function getNotifications()
-    {
-        $query = "SELECT * FROM notifications";
-        $st = $this->link->prepare($query);
-        $st->execute();
-        return $st->fetchAll(PDO::FETCH_ASSOC);
-    }
 
     public function getServices()
     {
-        $query = "SELECT service_key, name, percentages, dbcolumns FROM services";
+        $query = "SELECT name, percentages, dbcolumns FROM services";
         $st = $this->link->prepare($query);
         $st->execute();
-        return $st->fetchAll(PDO::FETCH_GROUP|PDO::FETCH_UNIQUE);
-    }
-
-    public function getNotificationTriggers()
-    {
-        $query = 'SELECT * from notification_triggers LEFT JOIN notifications ON notifications.id=notification_triggers.notification_id';
-        $st = $this->link->prepare($query);
-        $st->execute();
-        return $st->fetchAll(PDO::FETCH_ASSOC);
+        $rows = $st->fetchAll(PDO::FETCH_CLASS);
+        foreach($rows as $row) {
+            $key = md5($row->name);
+            $services[$key] =
+            [
+                'name' => $row->name,
+                'percentages' => $row->percentages,
+                'dbcolumns' => $row->dbcolumns
+            ];
+        }
+        return $services;
     }
 
     public function getLastTriggerTime($triggerId, $serverId)
@@ -89,7 +84,7 @@ class PdoSimple implements DatabaseInterface
         $st->bindValue(':serverId', $trigger['serverId'], PDO::PARAM_INT);
         $st->bindValue(':message', $trigger['message'], PDO::PARAM_STR);
         $st->bindValue(':time', time(), PDO::PARAM_INT);
-        $st->execute();
+        //$st->execute();
     }
 
     public function deleteOldRecords($expireTime)

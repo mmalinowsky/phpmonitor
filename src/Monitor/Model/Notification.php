@@ -1,18 +1,21 @@
 <?php
-namespace Monitor\Notification;
+namespace Monitor\Model;
 
+/**
+ * @Entity @Table(name="notifications")
+ **/
 class Notification
 {
-    
+    /**
+     * @Id @Column(type="integer") @GeneratedValue
+     **/
     private $id;
-    private $messageTemplate = '';
-    private $message = '';
+    /**
+     * @Column(type="string")
+     **/
+    private $messageTemplate;
 
-    public function __construct(array $data)
-    {
-        $this->messageTemplate = $data['message'];
-        $this->id = $data['id'];
-    }
+    private $message = '';
 
     public function getId()
     {
@@ -27,6 +30,11 @@ class Notification
     public function getMessage()
     {
         return $this->message;
+    }
+
+    public function setMessageTemplate($message)
+    {
+        $this->messageTemplate = $message;
     }
 
     public function setMessage($text)

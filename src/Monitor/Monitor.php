@@ -17,6 +17,7 @@ class Monitor
     private $notificationFacade;
     private $client;
     private $format;
+    private $entityManager;
 
     public function __construct(
         ConfigInterface $config,
@@ -35,6 +36,11 @@ class Monitor
     public function setClient(ClientInterface $client)
     {
         $this->client = $client;
+    }
+
+    public function setEntityManager($entityManager)
+    {
+        $this->entityManager = $entityManager;
     }
 
     private function checkServer($serverConfig)

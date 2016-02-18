@@ -27,7 +27,8 @@ class TriggersTest extends \PHPUnit_Framework_TestCase
 
     private function prepareTriggerData($operator, $value, $serviceName, $type = 'service')
     {
-        return  $data = [
+        return  $data = 
+        [
             'id' => 1212,
             'notification_id' => 1,
             'value' => $value,

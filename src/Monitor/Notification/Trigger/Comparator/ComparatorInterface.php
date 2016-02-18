@@ -1,7 +1,7 @@
 <?php
 namespace Monitor\Notification\Trigger\Comparator;
 
-use Monitor\Notification\Trigger\Trigger;
+use Monitor\Model\Trigger;
 
 interface ComparatorInterface
 {

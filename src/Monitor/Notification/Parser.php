@@ -1,6 +1,8 @@
 <?php
 namespace Monitor\Notification;
 
+use Monitor\Model\Notification;
+
 class Parser
 {
 

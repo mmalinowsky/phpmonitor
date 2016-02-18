@@ -10,19 +10,20 @@
     "authors": [
         {
             "name": "",
-            "homepage": "https://github.com/phaniso/Multi-Server-Monitor",
+            "homepage": "https://github.com/phaniso/phpmonitor",
             "role": "Developer"
         }
     ],
     "require": {
-        "php": ">= 5.5.0"
+        "php": ">= 5.5.0",
+        "doctrine/orm": "*",
+        "deployer/deployer": "3.*",
+        "deployphp/recipes": "~3.0"
     },
 	"require-dev": {
 		"phpunit/phpunit": "^4.0",
 		"squizlabs/php_codesniffer": "2.*",
-		"phpmd/phpmd": "2.*",
-		"deployer/deployer": "3.*",
-		"deployphp/recipes": "~3.0"
+		"phpmd/phpmd": "2.*"
 	},
 	"autoload": {
 	    "psr-0": { "Monitor":"src/" }

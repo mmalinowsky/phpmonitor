@@ -1,12 +1,13 @@
 <?php
 namespace Monitor\Notification\Trigger;
 
-use Monitor\Notification\Notification as Notification;
+use Monitor\Model\Notification;
 use Monitor\Notification\NotificationMgr;
 use Monitor\Database\DatabaseInterface;
 use Monitor\Notification\Trigger\Comparator\Comparator;
 use Monitor\Notification\Trigger\Comparator\Strategy\Context as StrategyContext;
 use Monitor\Utils\PercentageHelper;
+use Monitor\Model\Trigger;
 
 class Triggers extends Observable
 {
@@ -18,12 +19,21 @@ class Triggers extends Observable
     private $notificationData;
     private $notificationMgr;
     private $percentageHelper;
+    private $repository;
 
     public function __construct(NotificationMgr $notifcationMgr, PercentageHelper $percentageHelper)
     {
         $this->notificationDelay = 0;
         $this->notificationMgr = $notifcationMgr;
         $this->percentageHelper = $percentageHelper;
+    }
+
+    public function setRepository($repository, $autoload=true)
+    {
+        $this->repository = $repository;
+        if($autoload) {
+            $this->loadTriggers();
+        }
     }
 
     public function setComparator(Comparator $comparator)
@@ -46,29 +56,9 @@ class Triggers extends Observable
         $this->db = $db;
     }
 
-    /**
-     * Add trigger
-     *
-     * @access public
-     * @param  Trigger $trigger
-     * @return
-     */
-    public function addTrigger(Trigger $trigger)
+    public function loadTriggers()
     {
-        $this->triggers[] = $trigger;
-    }
-
-    /**
-     * Add triggers
-     *
-     * @access public
-     * @param array $triggersData
-     */
-    public function addTriggersByArray(array $triggersData)
-    {
-        foreach ($triggersData as $triggerData) {
-            $this->addTrigger(new Trigger($triggerData));
-        }
+        $this->triggers = $this->repository->findAll();
     }
 
     /**
@@ -173,10 +163,10 @@ class Triggers extends Observable
     private function fireTrigger(Trigger $trigger, array $serverData, $msDelay)
     {
         if (! $this->hasNotificationDelayExpired(
-                $trigger->getId(),
-                $serverData['server_id'],
-                $msDelay
-            )) {
+            $trigger->getId(),
+            $serverData['server_id'],
+            $msDelay
+        )) {
             return false;
         }
 

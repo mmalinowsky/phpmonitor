@@ -1,7 +1,7 @@
 <?php
 namespace Monitor\Notification\Service;
 
-use Monitor\Notification\Notification as Notification;
+use Monitor\Model\Notification;
 
 interface ServiceInterface
 {

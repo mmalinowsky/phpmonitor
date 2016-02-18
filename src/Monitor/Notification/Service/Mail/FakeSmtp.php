@@ -1,7 +1,7 @@
 <?php
 namespace Monitor\Notification\Service\Mail;
 
-use \Monitor\Notification\Notification as Notification;
+use Monitor\Model\Notification;
 use \Monitor\Notification\Service\ServiceInterface as ServiceInterface;
 
 class FakeSmtp implements ServiceInterface

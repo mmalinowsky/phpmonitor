@@ -1,31 +1,38 @@
 <?php
-namespace Monitor\Notification\Trigger;
-
+namespace Monitor\Model;
+/**
+ * @Entity @Table(name="notification_triggers")
+ **/
 class Trigger
 {
-    
+    /**
+     * @Id @Column(type="integer") @GeneratedValue
+     **/
     private $id;
-    private $notificationId;
+    /**
+     * @Column(type="integer")
+    **/
+    private $notification_id;
+    /**
+     * @Column(type="integer")
+     **/
     private $value;
+    /**
+     * @Column(type="string")
+    **/
     private $name;
+    /**
+     * @Column(type="string")
+    **/
     private $serviceName;
+    /**
+     * @Column(type="string")
+    **/
     private $operator;
+    /**
+     * @Column(type="string")
+    **/
     private $type;
-
-    public function __construct($data)
-    {
-        if (!is_array($data)) {
-            throw new \Exception('Trigger data provider must be an array');
-        }
-        
-        $this->id = $data['id'];
-        $this->notificationId = $data['notification_id'];
-        $this->value = $data['value'];
-        $this->name = $data['name'];
-        $this->serviceName = $data['service_name'];
-        $this->operator = $data['operator'];
-        $this->type = $data['type'];
-    }
     
     /**
      * Return properties
@@ -46,9 +53,14 @@ class Trigger
         return $this->id;
     }
 
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
     public function getNotificationId()
     {
-        return $this->notificationId;
+        return $this->notification_id;
     }
     
     public function getServiceName()

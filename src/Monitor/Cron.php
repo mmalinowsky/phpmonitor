@@ -1,14 +1,11 @@
 <?php
 namespace Monitor;
 
-require __DIR__.'/../../vendor/autoload.php';
+require __DIR__.'/bootstrap.php';
 
 if (isset($_SERVER['REMOTE_ADDR'])) {
     throw new \Exception('Can\'t run monitor directly by web browser, please set crontab.');
 }
-
-$config = new Config\ConfigJson;
-$config->loadFromFile('Config.json');
 
 $db = new Database\PdoSimple(
     [
@@ -20,9 +17,10 @@ $db = new Database\PdoSimple(
     ]
 );
 $formatFactory = new Format\Factory;
-$notificationMgr = new Notification\NotificationMgr(new Notification\Parser);
+$notificationMgr = new Notification\NotificationMgr(new Notification\Parser, $entityManager->getRepository('Monitor\Model\Notification'));
 $triggers = new Notification\Trigger\Triggers($notificationMgr, new Utils\PercentageHelper);
 $triggers->setComparator(new Notification\Trigger\Comparator\Comparator);
+$triggers->setRepository($entityManager->getRepository('Monitor\Model\Trigger'));
 $format = $formatFactory->build($config->get('format'));
 $monitor = new Monitor(
     $config,
@@ -37,5 +35,6 @@ $monitor = new Monitor(
     $format
 );
 
+$monitor->setEntityManager($entityManager);
 $monitor->setClient(new Client\Http\Http);
 $monitor->run();
