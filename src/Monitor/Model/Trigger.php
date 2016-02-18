@@ -1,5 +1,6 @@
 <?php
 namespace Monitor\Model;
+
 /**
  * @Entity @Table(name="notification_triggers")
  **/

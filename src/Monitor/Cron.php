@@ -18,7 +18,7 @@ $db = new Database\PdoSimple(
 );
 $formatFactory = new Format\Factory;
 $notificationMgr = new Notification\NotificationMgr(new Notification\Parser, $entityManager->getRepository('Monitor\Model\Notification'));
-$triggers = new Notification\Trigger\Triggers($notificationMgr, new Utils\PercentageHelper);
+$triggers = new Notification\Trigger\Triggers($notificationMgr, new Utils\PercentageHelper, $entityManager->getRepository('Monitor\Model\Service'));
 $triggers->setComparator(new Notification\Trigger\Comparator\Comparator);
 $triggers->setRepository($entityManager->getRepository('Monitor\Model\Trigger'));
 $format = $formatFactory->build($config->get('format'));
@@ -30,11 +30,11 @@ $monitor = new Monitor(
         $db,
         $notificationMgr,
         $triggers,
-        new Notification\Service\Factory
+        new Notification\Service\Factory,
+        $entityManager->getRepository('Monitor\Model\Service')
     ),
-    $format
+    $format,
+    $entityManager
 );
-
-$monitor->setEntityManager($entityManager);
 $monitor->setClient(new Client\Http\Http);
 $monitor->run();

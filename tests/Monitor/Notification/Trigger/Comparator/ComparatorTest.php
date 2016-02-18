@@ -1,7 +1,7 @@
 <?php
 namespace Monitor\Notification\Trigger\Comparator;
 
-use Monitor\Notification\Trigger\Trigger;
+use Monitor\Model\Trigger;
 
 class ComparatorTest extends \PHPUnit_Framework_TestCase
 {
@@ -10,24 +10,25 @@ class ComparatorTest extends \PHPUnit_Framework_TestCase
         $this->comparator = new Comparator;
     }
 
-    private function prepareTriggerData($operator, $value)
+    private function prepareTrigger($operator, $value)
     {
-        return  $data = [
-            'id' => 1212,
-            'notification_id' => 1,
-            'value' => $value,
-            'name' => 'unknown',
-            'service_name' => 'unknownServiceName',
-            'operator' => $operator,
-            'type' =>'service'
-        ];
+        $trigger = $this->getMockBuilder('Monitor\Model\Trigger')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $trigger->method('getValue')
+            ->willReturn($value);
+
+        $trigger->method('getOperator')
+            ->willReturn($operator);
+
+        return $trigger;
     }
 
     public function testIsValueIsHigher()
     {
         $valueToCompare = 50;
-        $data = $this->prepareTriggerData('>', 10);
-        $trigger = new Trigger($data);
+        $trigger =  $this->prepareTrigger('>', 10);
 
         $this->assertTrue($this->comparator->compare($trigger, $valueToCompare));
     }
@@ -35,8 +36,7 @@ class ComparatorTest extends \PHPUnit_Framework_TestCase
     public function testIsValueIsEqual()
     {
         $valueToCompare = 50;
-        $data = $this->prepareTriggerData('=', 50);
-        $trigger = new Trigger($data);
+        $trigger = $this->prepareTrigger('=', 50);
 
         $this->assertTrue($this->comparator->compare($trigger, $valueToCompare));
     }
@@ -44,8 +44,7 @@ class ComparatorTest extends \PHPUnit_Framework_TestCase
     public function testIsValueIsLower()
     {
         $valueToCompare = 30;
-        $data = $this->prepareTriggerData('<', 50);
-        $trigger = new Trigger($data);
+        $trigger = $this->prepareTrigger('<', 50);
 
         $this->assertTrue($this->comparator->compare($trigger, $valueToCompare));
     }
@@ -53,8 +52,7 @@ class ComparatorTest extends \PHPUnit_Framework_TestCase
     public function testIsValueIsDifferent()
     {
         $valueToCompare = 50;
-        $data = $this->prepareTriggerData('!=', 50);
-        $trigger = new Trigger($data);
+        $trigger = $this->prepareTrigger('!=', 50);
 
         $this->assertFalse($this->comparator->compare($trigger, $valueToCompare));
     }

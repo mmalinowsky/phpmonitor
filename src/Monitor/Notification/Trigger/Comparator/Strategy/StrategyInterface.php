@@ -7,5 +7,5 @@ use Monitor\Utils\PercentageHelper;
 
 interface StrategyInterface
 {
-    public function compare(Trigger $trigger, array $serverData, array $services, PercentageHelper $percentageHelper, ComparatorInterface $comparator);
+    public function compare(Trigger $trigger, array $serverData, $serviceRepository, PercentageHelper $percentageHelper, ComparatorInterface $comparator);
 }

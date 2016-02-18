@@ -11,7 +11,7 @@ class Http implements ClientInterface
 
     public function __construct()
     {
-        if (!is_callable('curl_init')) {
+        if (! is_callable('curl_init')) {
             throw new Exception('Curl function is not callable');
         }
 

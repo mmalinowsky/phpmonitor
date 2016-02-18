@@ -6,6 +6,7 @@ use Monitor\Notification\Facade;
 use Monitor\Client\ClientInterface;
 use Monitor\Format\FormatInterface;
 use Monitor\Config\ConfigInterface;
+use Doctrine\ORM\EntityManager;
 
 class Monitor
 {
@@ -23,7 +24,8 @@ class Monitor
         ConfigInterface $config,
         DatabaseInterface $database,
         Facade $notificationFacade,
-        FormatInterface $format
+        FormatInterface $format,
+        EntityManager $entityManager
     ) {
         $this->config = $config;
         $this->database = $database;
@@ -31,16 +33,12 @@ class Monitor
         $this->serverHistoryStruct = $this->database->getTableStructure();
         $this->notificationFacade = $notificationFacade;
         $this->format = $format;
+        $this->entityManager = $entityManager;
     }
     
     public function setClient(ClientInterface $client)
     {
         $this->client = $client;
-    }
-
-    public function setEntityManager($entityManager)
-    {
-        $this->entityManager = $entityManager;
     }
 
     private function checkServer($serverConfig)
@@ -60,15 +58,14 @@ class Monitor
         if ($serverData['status'] !== 'online') {
             $serverData['status'] = 'offline';
         }
+            $this->addServerHistory($serverData);
             $this->notificationFacade->checkTriggers($serverData, $this->config->get('ms_in_hour'));
-            return $serverData;
     }
 
     public function run()
     {
         $this->isClientValid();
-        $serversData = array_map([$this, "checkServer"], $this->serversConfig);
-        $this->database->addServerHistory($serversData);
+        array_map([$this, "checkServer"], $this->serversConfig);
         $this->deleteOldHistoryRecords();
     }
 
@@ -120,5 +117,33 @@ class Monitor
         $decodedData = $this->format->convertToArray($resources);
         $serverData = $this->fillArrayWithDefaultValue($this->serverHistoryStruct, $decodedData);
         return $serverData;
+    }
+
+    private function addServerHistory($server)
+    {
+        $serverHistory = new Model\ServerHistory;
+        $serverHistory->setServer_id($server['server_id']);
+        $serverHistory->setHostname($server['hostname']);
+        $serverHistory->setStatus($server['status']);
+        $serverHistory->setSys_load($server['sys_load']);
+        $serverHistory->setCpu_cores($server['cpu_cores']);
+        $serverHistory->setMemory_usage($server['memory_usage']);
+        $serverHistory->setMemory_total($server['memory_total']);
+        $serverHistory->setMemory_free($server['memory_free']);
+        $serverHistory->setDisk_free($server['disk_free']);
+        $serverHistory->setDisk_total($server['disk_total']);
+        $serverHistory->setDisk_usage($server['disk_usage']);
+        $serverHistory->setPing($server['ping']);
+        $serverHistory->setMysql_slow_query($server['mysql_slow_query']);
+        $serverHistory->setMysql_query_avg($server['mysql_query_avg']);
+        $serverHistory->setMemcache_hits($server['memcache_hits']);
+        $serverHistory->setMemcache_miss($server['memcache_miss']);
+        $serverHistory->setMemcache_get($server['memcache_get']);
+        $serverHistory->setMemcache_cmd($server['memcache_cmd']);
+        $serverHistory->setMemcache_bytes($server['memcache_bytes']);
+        $serverHistory->setMemcache_max_bytes($server['memcache_max_bytes']);
+        $serverHistory->setTime(time());
+        $this->entityManager->persist($serverHistory);
+        $this->entityManager->flush();
     }
 }

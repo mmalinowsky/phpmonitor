@@ -7,12 +7,11 @@ class PercentageHelper
      * Calculate service percentage
      * @access public
      * @param array $serverData server history
-     * @param array $service
      * @return double
      */
-    public function getServicePercentage(array $serverData, array $service)
+    public function getServicePercentage(array $serverData, $service)
     {
-        list($column1, $column2) = array_pad(explode(":", $service['dbcolumns']), 2, 1);
+        list($column1, $column2) = array_pad(explode(":", $service->getDBColumns()), 2, 1);
         if (is_numeric($column2)) {
             $serverData[$column2] = $column2;
         }

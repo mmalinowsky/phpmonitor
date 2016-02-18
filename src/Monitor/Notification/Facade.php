@@ -22,7 +22,6 @@ class Facade
     ) {
         $this->db = $db;
         $this->triggers = $triggers;
-        $this->services = $db->getServices();
         $this->notificationMgr = $notificationMgr;
         $this->notificationMgr->setNotificationData($config->get('notification')['data']);
         $this->triggers->setNotificationDelay($config->get('notification_delay_in_hours'));
@@ -49,6 +48,6 @@ class Facade
      */
     public function checkTriggers(array $serverData, $msInHour)
     {
-        $this->triggers->checkTriggers($serverData, $this->services, $msInHour);
+        $this->triggers->checkTriggers($serverData, $msInHour);
     }
 }

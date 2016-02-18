@@ -20,18 +20,20 @@ class Triggers extends Observable
     private $notificationMgr;
     private $percentageHelper;
     private $repository;
+    private $serviceRepository;
 
-    public function __construct(NotificationMgr $notifcationMgr, PercentageHelper $percentageHelper)
+    public function __construct(NotificationMgr $notifcationMgr, PercentageHelper $percentageHelper, $serviceRepository)
     {
         $this->notificationDelay = 0;
         $this->notificationMgr = $notifcationMgr;
         $this->percentageHelper = $percentageHelper;
+        $this->serviceRepository = $serviceRepository;
     }
 
-    public function setRepository($repository, $autoload=true)
+    public function setRepository($repository, $autoload = true)
     {
         $this->repository = $repository;
-        if($autoload) {
+        if ($autoload) {
             $this->loadTriggers();
         }
     }
@@ -112,12 +114,11 @@ class Triggers extends Observable
      *
      * @access public
      * @param  array $serverData
-     * @param  array $services
      */
-    public function checkTriggers(array $serverData, array $services, $msDelay)
+    public function checkTriggers(array $serverData, $msDelay)
     {
         foreach ($this->triggers as $trigger) {
-            if ($this->shouldTriggerBeFired($trigger, $serverData, $services)) {
+            if ($this->shouldTriggerBeFired($trigger, $serverData)) {
                 $this->fireTrigger($trigger, $serverData, $msDelay);
             }
         }
@@ -129,14 +130,13 @@ class Triggers extends Observable
      * @access public
      * @param  Trigger $trigger
      * @param  array   $serverData
-     * @param  array   $services
      * @return boolean
      */
-    public function shouldTriggerBeFired(Trigger $trigger, array $serverData, array $services)
+    public function shouldTriggerBeFired(Trigger $trigger, array $serverData)
     {
         $this->checkIsComparatorValid();
         $strategy = new StrategyContext($trigger->getType());
-        return $strategy->compare($trigger, $serverData, $services, $this->percentageHelper, $this->comparator);
+        return $strategy->compare($trigger, $serverData, $this->serviceRepository, $this->percentageHelper, $this->comparator);
     }
 
     /**

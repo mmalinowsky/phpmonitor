@@ -5,7 +5,6 @@ use Monitor\Model\Notification;
 
 class NotificationMgr
 {
-    private $notifications = [];
     private $notificationParser;
     private $notificationData;
     private $observers;
