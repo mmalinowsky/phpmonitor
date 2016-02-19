@@ -2,7 +2,7 @@
 namespace Monitor\Model;
 
 /**
- * @Entity @Table(name="notification_log")
+ * @Entity @Table(name="notification_logs")
  **/
 class NotificationLog
 {
@@ -10,7 +10,6 @@ class NotificationLog
      * @Id @Column(type="integer") @GeneratedValue
      **/
     private $id;
-
     /**
      * @Column(type="integer")
      **/
@@ -18,7 +17,7 @@ class NotificationLog
     /**
      * @Column(type="integer")
      **/
-    private $server_id
+    private $server_id;
     /**
      * @Column(type="string")
      **/

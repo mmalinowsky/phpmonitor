@@ -3,11 +3,11 @@ namespace Monitor\Notification\Trigger;
 
 use Monitor\Model\Notification;
 use Monitor\Notification\NotificationMgr;
-use Monitor\Database\DatabaseInterface;
 use Monitor\Notification\Trigger\Comparator\Comparator;
 use Monitor\Notification\Trigger\Comparator\Strategy\Context as StrategyContext;
 use Monitor\Utils\PercentageHelper;
 use Monitor\Model\Trigger;
+use Monitor\Model\NotificationLog;
 
 class TriggerMgr extends Observable
 {
@@ -15,19 +15,19 @@ class TriggerMgr extends Observable
     private $triggers;
     private $comparator;
     private $notificationDelay;
-    private $db;
     private $notificationData;
     private $notificationMgr;
     private $percentageHelper;
+    private $entityManager;
     private $serviceRepository;
-
-    public function __construct(NotificationMgr $notifcationMgr, PercentageHelper $percentageHelper, $serviceRepository, $triggerRepository)
+    public function __construct(NotificationMgr $notifcationMgr, PercentageHelper $percentageHelper, $entityManager)
     {
         $this->notificationDelay = 0;
         $this->notificationMgr = $notifcationMgr;
+        $this->entityManager = $entityManager;
         $this->percentageHelper = $percentageHelper;
-        $this->serviceRepository = $serviceRepository;
-        $this->triggers = $triggerRepository->findAll();
+        $this->triggers = $entityManager->getRepository('Monitor\Model\Trigger')->findAll();
+        $this->serviceRepository = $entityManager->getRepository('Monitor\Model\Service');
     }
 
     public function setComparator(Comparator $comparator)
@@ -43,11 +43,6 @@ class TriggerMgr extends Observable
     public function setNotificationDelay($delay)
     {
         $this->notificationDelay = $delay;
-    }
-
-    public function setDb(DatabaseInterface &$db)
-    {
-        $this->db = $db;
     }
 
     /**
@@ -92,7 +87,27 @@ class TriggerMgr extends Observable
      */
     private function hasNotificationDelayExpired($triggerId, $serverId, $msDelay)
     {
-        $timeDiff = $this->db->getLastTriggerTime($triggerId, $serverId) - time();
+        $queryBuilder = $this->entityManager->createQueryBuilder();
+        $queryBuilder->select('nl.created')
+            ->from('Monitor\Model\NotificationLog', 'nl')
+            ->where('nl.trigger_id = ?1')
+            ->andWhere('nl.server_id = ?2')
+            ->orderBy('nl.created', 'DESC')
+            ->setMaxResults(1)
+            ->setParameters
+            (
+                [
+                    '1' => $triggerId,
+                    '2' => $serverId
+                ]
+            );
+        $query = $queryBuilder->getQuery();
+        $queryResult = $query->getResult();
+        if(! $queryResult) {
+            return true;
+        }
+        $timeOfLastFiredUpTrigger = $queryResult[0]['created'];
+        $timeDiff = $timeOfLastFiredUpTrigger - time();
         return ($this->notificationDelay * $msDelay + $timeDiff >= 0) ? false : true;
     }
 
@@ -159,14 +174,13 @@ class TriggerMgr extends Observable
 
         $notification = $this->prepareNotification($trigger, $serverData);
         $this->notifyServices($notification);
-
-        $this->db->logTrigger(
-            [
-                'id'        => $trigger->getId(),
-                'serverId'  => $serverData['server_id'],
-                'message'   => $notification->getMessage()
-            ]
-        );
+        $log = new NotificationLog;
+        $log->setTriggerId($trigger->getId());
+        $log->setServerId($serverData['server_id']);
+        $log->setMessage($notification->getMessage());
+        $log->setCreated(time());
+        $this->entityManager->persist($log);
+        $this->entityManager->flush();
         return true;
     }
 }

@@ -12,10 +12,7 @@ class MonitorTest extends \PHPUnit_Framework_TestCase
         $this->config = $this->getMockBuilder('\Monitor\Config\ConfigJson')
                              ->setMockClassName('Config')
                              ->getMock();
-        $this->db = $this->getMockBuilder('\Monitor\Database\PdoSimple')
-                         ->setMockClassName('PdoSimple')
-                         ->disableOriginalConstructor()
-                         ->getMock();
+       
         $this->notificationFacade = $this->getMockBuilder('\Monitor\Notification\Facade')
                                          ->setMockClassName('Facade')
                                          ->disableOriginalConstructor()
@@ -34,7 +31,6 @@ class MonitorTest extends \PHPUnit_Framework_TestCase
             ->willReturn($entityManager);
         $this->monitor = new Monitor(
             $this->config,
-            $this->db,
             $this->notificationFacade,
             $this->format,
             $entityManager

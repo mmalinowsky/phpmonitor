@@ -2,7 +2,6 @@
 namespace Monitor\Notification;
 
 use Monitor\Notification\Trigger\TriggerMgr;
-use Monitor\Database\DatabaseInterface;
 use Monitor\Config\ConfigInterface;
 use Monitor\Notification\Service\Factory as ServiceFactory;
 
@@ -10,21 +9,17 @@ class Facade
 {
     private $notificationMgr;
     private $triggerMgr;
-    private $db;
 
     public function __construct(
         ConfigInterface $config,
-        DatabaseInterface &$db,
         NotificationMgr $notificationMgr,
         TriggerMgr $triggerMgr,
         ServiceFactory $serviceFactory
     ) {
-        $this->db = $db;
         $this->triggerMgr = $triggerMgr;
         $this->notificationMgr = $notificationMgr;
         $this->notificationMgr->setNotificationData($config->get('notification')['data']);
         $this->triggerMgr->setNotificationDelay($config->get('notification_delay_in_hours'));
-        $this->triggerMgr->setDb($db);
         $this->addObservers($config->get('notification')['services'], $serviceFactory);
     }
 

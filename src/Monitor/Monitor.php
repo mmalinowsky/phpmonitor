@@ -1,13 +1,11 @@
 <?php
 namespace Monitor;
 
-use Monitor\Database\DatabaseInterface;
 use Monitor\Notification\Facade;
 use Monitor\Client\ClientInterface;
 use Monitor\Format\FormatInterface;
 use Monitor\Config\ConfigInterface;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Query\ResultSetMapping;
 
 class Monitor
 {
@@ -23,13 +21,11 @@ class Monitor
 
     public function __construct(
         ConfigInterface $config,
-        DatabaseInterface $database,
         Facade $notificationFacade,
         FormatInterface $format,
         EntityManager $entityManager
     ) {
         $this->config = $config;
-        $this->database = $database;
         $this->notificationFacade = $notificationFacade;
         $this->format = $format;
         $this->entityManager = $entityManager;
@@ -60,7 +56,11 @@ class Monitor
             $serverData['status'] = 'offline';
         }
             $this->addServerHistory($serverData);
-            $this->notificationFacade->checkTriggers($serverData, $this->config->get('ms_in_hour'));
+            $this->notificationFacade->checkTriggers
+            (
+                $serverData,
+                $this->config->get('ms_in_hour')
+            );
     }
 
     public function run()
@@ -97,9 +97,9 @@ class Monitor
 
     private function getServerHistoryStructure()
     {
-        $r = new \ReflectionClass(new Model\ServerHistory);
+        $reflection = new \ReflectionClass(new Model\ServerHistory);
         $properties = [];
-        foreach($r->getProperties() as $property) {
+        foreach($reflection->getProperties() as $property) {
             $properties[] = $property->name;
         }
         unset($properties['id']);
