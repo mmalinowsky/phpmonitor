@@ -12,7 +12,7 @@ class Trigger
     private $id;
     /**
      * @Column(type="integer")
-    **/
+     **/
     private $notification_id;
     /**
      * @Column(type="integer")
@@ -20,19 +20,19 @@ class Trigger
     private $value;
     /**
      * @Column(type="string")
-    **/
+     **/
     private $name;
     /**
      * @Column(type="string")
-    **/
+     **/
     private $serviceName;
     /**
      * @Column(type="string")
-    **/
+     **/
     private $operator;
     /**
      * @Column(type="string")
-    **/
+     **/
     private $type;
     
     /**

@@ -9,7 +9,7 @@ use Monitor\Notification\Trigger\Comparator\Strategy\Context as StrategyContext;
 use Monitor\Utils\PercentageHelper;
 use Monitor\Model\Trigger;
 
-class Triggers extends Observable
+class TriggerMgr extends Observable
 {
     
     private $triggers;
@@ -19,23 +19,15 @@ class Triggers extends Observable
     private $notificationData;
     private $notificationMgr;
     private $percentageHelper;
-    private $repository;
     private $serviceRepository;
 
-    public function __construct(NotificationMgr $notifcationMgr, PercentageHelper $percentageHelper, $serviceRepository)
+    public function __construct(NotificationMgr $notifcationMgr, PercentageHelper $percentageHelper, $serviceRepository, $triggerRepository)
     {
         $this->notificationDelay = 0;
         $this->notificationMgr = $notifcationMgr;
         $this->percentageHelper = $percentageHelper;
         $this->serviceRepository = $serviceRepository;
-    }
-
-    public function setRepository($repository, $autoload = true)
-    {
-        $this->repository = $repository;
-        if ($autoload) {
-            $this->loadTriggers();
-        }
+        $this->triggers = $triggerRepository->findAll();
     }
 
     public function setComparator(Comparator $comparator)
@@ -56,11 +48,6 @@ class Triggers extends Observable
     public function setDb(DatabaseInterface &$db)
     {
         $this->db = $db;
-    }
-
-    public function loadTriggers()
-    {
-        $this->triggers = $this->repository->findAll();
     }
 
     /**

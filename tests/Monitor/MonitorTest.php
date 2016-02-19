@@ -5,6 +5,10 @@ class MonitorTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
+        $serversConfig = new Model\Server;
+        $serversConfig->setName('Test server');
+        $serversConfig->setUrlPath('http://api.dev');
+        $serversConfig->setPingHostname('google.com');
         $this->config = $this->getMockBuilder('\Monitor\Config\ConfigJson')
                              ->setMockClassName('Config')
                              ->getMock();
@@ -20,9 +24,14 @@ class MonitorTest extends \PHPUnit_Framework_TestCase
                                         ->setMockClassName('FormatInterface')
                                         ->disableOriginalConstructor()
                                         ->getMock();
+
         $entityManager = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
+            ->setMethods(['findAll', 'getRepository'])
             ->disableOriginalConstructor()
             ->getMock();
+        
+        $entityManager->method('getRepository')
+            ->willReturn($entityManager);
         $this->monitor = new Monitor(
             $this->config,
             $this->db,
@@ -57,11 +66,11 @@ class MonitorTest extends \PHPUnit_Framework_TestCase
         $ret = $this->invokeMethod(
             $this->monitor,
             'fillArrayWithDefaultValue',
-            [
-                $this->struct,
-                $this->arrayToFill,
-                $defaultString
-            ]
+        [
+            $this->struct,
+            $this->arrayToFill,
+            $defaultString
+        ]
         );
         $this->assertSame($ret, $endArray);
     }

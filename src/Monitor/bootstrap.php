@@ -18,5 +18,17 @@ $dbParams =
     'password'  => $config->get('password'),
     'dbname'    => $config->get('database'),
 ];
+
+
+$db = new Monitor\Database\PdoSimple(
+    [
+        $config->get('hostname'),
+        $config->get('username'),
+        $config->get('password'),
+        $config->get('database'),
+        $config->get('dbdriver')
+    ]
+);
+
 $ormConfig = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode);
 $entityManager = EntityManager::create($dbParams, $ormConfig);

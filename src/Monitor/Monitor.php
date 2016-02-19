@@ -7,6 +7,7 @@ use Monitor\Client\ClientInterface;
 use Monitor\Format\FormatInterface;
 use Monitor\Config\ConfigInterface;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Query\ResultSetMapping;
 
 class Monitor
 {
@@ -29,11 +30,11 @@ class Monitor
     ) {
         $this->config = $config;
         $this->database = $database;
-        $this->serversConfig = $this->database->getServersConfig();
-        $this->serverHistoryStruct = $this->database->getTableStructure();
         $this->notificationFacade = $notificationFacade;
         $this->format = $format;
         $this->entityManager = $entityManager;
+        $this->serversConfig = $this->getServersConfig();
+        $this->serverHistoryStruct = $this->getServerHistoryStructure();
     }
     
     public function setClient(ClientInterface $client)
@@ -44,16 +45,16 @@ class Monitor
     private function checkServer($serverConfig)
     {
         $this->client->setQuery(
-            $serverConfig['url_path'],
+            $serverConfig->getUrlPath(),
             [
                 'format'    => $this->config->get('format'),
-                'ping_host' => $serverConfig['ping_hostname']
+                'ping_host' => $serverConfig->getPingHostname()
             ]
         );
 
             $serverData = $this->getServerData();
-            $serverData['server_id'] = $serverConfig['id'];
-            $serverData['hostname'] = $serverConfig['name'];
+            $serverData['server_id'] = $serverConfig->getId();
+            $serverData['hostname'] = $serverConfig->getName();
 
         if ($serverData['status'] !== 'online') {
             $serverData['status'] = 'offline';
@@ -78,10 +79,32 @@ class Monitor
 
     private function deleteOldHistoryRecords()
     {
-        $expireTime = $this->config->get('history_expire_time_in_days');
-        $this->database->deleteOldRecords($expireTime * $this->config->get('ms_in_day'));
+        $expireTimeInMs = $this->config->get('history_expire_time_in_days') * $this->config->get('ms_in_day');
+        $expireTime = time() - $expireTimeInMs;
+        $query = $this->entityManager
+            ->createQuery('DELETE from \Monitor\Model\ServerHistory s where s.time < ?1');
+        $query->setParameter('1', $expireTime);
+        $query->execute();
     }
 
+    private function getServersConfig()
+    {
+        $serverConfigs = $this->entityManager
+            ->getRepository('\Monitor\Model\Server')
+            ->findAll();
+        return $serverConfigs;
+    }
+
+    private function getServerHistoryStructure()
+    {
+        $r = new \ReflectionClass(new Model\ServerHistory);
+        $properties = [];
+        foreach($r->getProperties() as $property) {
+            $properties[] = $property->name;
+        }
+        unset($properties['id']);
+        return $properties;
+    }
     /**
      * Fill array with concret value when can't find same key in $arrayTofill as in $struct array
      *

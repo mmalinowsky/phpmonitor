@@ -28,21 +28,6 @@ class PdoSimple implements DatabaseInterface
         }
     }
 
-    public function getServersConfig()
-    {
-        $query = 'SELECT * from servers';
-        $st = $this->link->prepare($query);
-        $st->execute();
-        return $st->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function getTableStructure()
-    {
-        $st = $this->link->prepare('DESCRIBE servers_history');
-        $st->execute();
-        return $st->fetchAll(PDO::FETCH_COLUMN);
-    }
-
     public function getLastTriggerTime($triggerId, $serverId)
     {
         $query = 'SELECT created from notification_logs WHERE trigger_id=:triggerId AND server_id = :serverId ORDER BY created DESC LIMIT 1';
@@ -65,15 +50,6 @@ class PdoSimple implements DatabaseInterface
         $st->bindValue(':serverId', $trigger['serverId'], PDO::PARAM_INT);
         $st->bindValue(':message', $trigger['message'], PDO::PARAM_STR);
         $st->bindValue(':time', time(), PDO::PARAM_INT);
-        $st->execute();
-    }
-
-    public function deleteOldRecords($expireTime)
-    {
-        $expireTime = time() - $expireTime;
-        $query = 'DELETE from servers_history where time < ?';
-        $st = $this->link->prepare($query);
-        $st->BindParam(1, $expireTime, PDO::PARAM_INT);
         $st->execute();
     }
 }

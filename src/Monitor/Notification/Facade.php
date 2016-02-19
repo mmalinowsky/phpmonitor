@@ -1,7 +1,7 @@
 <?php
 namespace Monitor\Notification;
 
-use Monitor\Notification\Trigger\Triggers;
+use Monitor\Notification\Trigger\TriggerMgr;
 use Monitor\Database\DatabaseInterface;
 use Monitor\Config\ConfigInterface;
 use Monitor\Notification\Service\Factory as ServiceFactory;
@@ -9,23 +9,22 @@ use Monitor\Notification\Service\Factory as ServiceFactory;
 class Facade
 {
     private $notificationMgr;
-    private $triggers;
-    private $services;
+    private $triggerMgr;
     private $db;
 
     public function __construct(
         ConfigInterface $config,
         DatabaseInterface &$db,
         NotificationMgr $notificationMgr,
-        Triggers $triggers,
+        TriggerMgr $triggerMgr,
         ServiceFactory $serviceFactory
     ) {
         $this->db = $db;
-        $this->triggers = $triggers;
+        $this->triggerMgr = $triggerMgr;
         $this->notificationMgr = $notificationMgr;
         $this->notificationMgr->setNotificationData($config->get('notification')['data']);
-        $this->triggers->setNotificationDelay($config->get('notification_delay_in_hours'));
-        $this->triggers->setDb($db);
+        $this->triggerMgr->setNotificationDelay($config->get('notification_delay_in_hours'));
+        $this->triggerMgr->setDb($db);
         $this->addObservers($config->get('notification')['services'], $serviceFactory);
     }
 
@@ -34,9 +33,9 @@ class Facade
         foreach ($observers as $observer) {
             try {
                 $service = $serviceFactory->getService($observer);
-                $this->triggers->addObserver($service);
+                $this->triggerMgr->addObserver($service);
             } catch (\Exception $e) {
-                $this->triggers->popObserver();
+                $this->triggerMgr->popObserver();
             }
         }
     }
@@ -48,6 +47,6 @@ class Facade
      */
     public function checkTriggers(array $serverData, $msInHour)
     {
-        $this->triggers->checkTriggers($serverData, $msInHour);
+        $this->triggerMgr->checkTriggers($serverData, $msInHour);
     }
 }

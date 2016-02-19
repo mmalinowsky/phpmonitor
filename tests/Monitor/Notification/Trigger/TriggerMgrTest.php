@@ -3,7 +3,7 @@ namespace Monitor\Notification\Trigger;
 
 use Monitor\Utils\PercentageHelper;
 
-class TriggersTest extends \PHPUnit_Framework_TestCase
+class TriggerMgrTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
@@ -34,9 +34,7 @@ $this->service = $this->getMockBuilder('Monitor\Model\Service')
             ->willReturn(true);
         $this->serviceRepository->method('findOneBy')
             ->willReturn($this->service);
-        //$serv = $this->serviceRepository->findOneBy(['memory']);
-        //echo $serv->getDBColumns().PHP_EOL;
-        $this->triggers = new Triggers($notificationMgr, new PercentageHelper, $this->serviceRepository);
+        $this->triggers = new TriggerMgr($notificationMgr, new PercentageHelper, $this->serviceRepository, $triggerRepository);
         $this->comparator = new Comparator\Comparator;
         $this->triggers->setComparator($this->comparator);
     }
