@@ -95,17 +95,109 @@ class ServerHistory
      **/
     private $time;
 
-    public function __call($name, $args)
+    public function setServerId($id)
     {
-        $name = strtolower($name);
-        $excludedItems = [''];
-        if (preg_match('/^get/', $name)) {
-            $propertyName = substr($name, 3);
-            return $this->$propertyName;
-        }
-        if (preg_match('/^set/', $name)) {
-            $propertyName = substr($name, 3);
-            $this->$propertyName = $args[0];
-        }
+        $this->server_id = $id;
     }
+
+    public function setHostname($hostname)
+    {
+        $this->hostname = $hostname;
+    }
+
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+
+    public function setSysLoad($sysload)
+    {
+        $this->sys_load = $sysload;
+    }
+
+    public function setCpuCores($cpuCores)
+    {
+        $this->cpu_cores = $cpuCores;
+    }
+
+    public function setMemoryUsage($memoryUsage)
+    {
+        $this->memory_usage = $memoryUsage;
+    }
+
+    public function setMemoryTotal($memoryTotal)
+    {
+        $this->memory_total = $memoryTotal;
+    }
+
+    public function setMemoryFree($memoryFree)
+    {
+        $this->memory_free = $memoryFree;
+    }
+
+    public function setDiskUsage($diskUsage)
+    {
+        $this->disk_usage = $diskUsage;
+    }
+
+    public function setDiskTotal($diskTotal)
+    {
+        $this->disk_total = $diskTotal;
+    }
+
+    public function setDiskFree($diskFree)
+    {
+        $this->disk_free = $diskFree;
+    }
+
+    public function setPing($ping)
+    {
+        $this->ping = $ping;
+    }
+
+    public function setMysqlSlowQuery($msq)
+    {
+        $this->mysq_slow_query = $msq;
+    }
+
+    public function setMysqlQueryAvg($mqv)
+    {
+        $this->mysql_query_avg = $mqv;
+    }
+
+    public function setMemcacheHits($hits)
+    {
+        $this->memcache_hits = $hits;
+    }
+
+    public function setMemcacheMiss($miss)
+    {
+        $this->memcache_miss = $miss;
+    }
+
+    public function setMemcacheGet($get)
+    {
+        $this->memcache_get = $get;
+    }
+
+    public function setMemcacheCmd($cmd)
+    {
+        $this->memcache_cmd = $cmd;
+    }
+
+    public function setMemcacheBytes($bytes)
+    {
+        $this->memcache_bytes = $bytes;
+    }
+
+    public function setMemcacheMaxBytes($maxBytes)
+    {
+        $this->memcache_max_bytes = $maxBytes;
+    }
+
+    public function setTime($time)
+    {
+        $this->time = $time;
+    }
+
 }

@@ -13,7 +13,6 @@ class Monitor
     private $config;
     private $serversConfig = [];
     private $serverHistoryStruct = [];
-    private $database;
     private $notificationFacade;
     private $client;
     private $format;
@@ -56,8 +55,7 @@ class Monitor
             $serverData['status'] = 'offline';
         }
             $this->addServerHistory($serverData);
-            $this->notificationFacade->checkTriggers
-            (
+            $this->notificationFacade->checkTriggers(
                 $serverData,
                 $this->config->get('ms_in_hour')
             );
@@ -99,7 +97,7 @@ class Monitor
     {
         $reflection = new \ReflectionClass(new Model\ServerHistory);
         $properties = [];
-        foreach($reflection->getProperties() as $property) {
+        foreach ($reflection->getProperties() as $property) {
             $properties[] = $property->name;
         }
         unset($properties['id']);
@@ -145,26 +143,26 @@ class Monitor
     private function addServerHistory($server)
     {
         $serverHistory = new Model\ServerHistory;
-        $serverHistory->setServer_id($server['server_id']);
+        $serverHistory->setServerId($server['server_id']);
         $serverHistory->setHostname($server['hostname']);
         $serverHistory->setStatus($server['status']);
-        $serverHistory->setSys_load($server['sys_load']);
-        $serverHistory->setCpu_cores($server['cpu_cores']);
-        $serverHistory->setMemory_usage($server['memory_usage']);
-        $serverHistory->setMemory_total($server['memory_total']);
-        $serverHistory->setMemory_free($server['memory_free']);
-        $serverHistory->setDisk_free($server['disk_free']);
-        $serverHistory->setDisk_total($server['disk_total']);
-        $serverHistory->setDisk_usage($server['disk_usage']);
+        $serverHistory->setSysLoad($server['sys_load']);
+        $serverHistory->setCpuCores($server['cpu_cores']);
+        $serverHistory->setMemoryUsage($server['memory_usage']);
+        $serverHistory->setMemoryTotal($server['memory_total']);
+        $serverHistory->setMemoryFree($server['memory_free']);
+        $serverHistory->setDiskFree($server['disk_free']);
+        $serverHistory->setDiskTotal($server['disk_total']);
+        $serverHistory->setDiskUsage($server['disk_usage']);
         $serverHistory->setPing($server['ping']);
-        $serverHistory->setMysql_slow_query($server['mysql_slow_query']);
-        $serverHistory->setMysql_query_avg($server['mysql_query_avg']);
-        $serverHistory->setMemcache_hits($server['memcache_hits']);
-        $serverHistory->setMemcache_miss($server['memcache_miss']);
-        $serverHistory->setMemcache_get($server['memcache_get']);
-        $serverHistory->setMemcache_cmd($server['memcache_cmd']);
-        $serverHistory->setMemcache_bytes($server['memcache_bytes']);
-        $serverHistory->setMemcache_max_bytes($server['memcache_max_bytes']);
+        $serverHistory->setMysqlSlowQuery($server['mysql_slow_query']);
+        $serverHistory->setMysqlQueryAvg($server['mysql_query_avg']);
+        $serverHistory->setMemcacheHits($server['memcache_hits']);
+        $serverHistory->setMemcacheMiss($server['memcache_miss']);
+        $serverHistory->setMemcacheGet($server['memcache_get']);
+        $serverHistory->setMemcacheCmd($server['memcache_cmd']);
+        $serverHistory->setMemcacheBytes($server['memcache_bytes']);
+        $serverHistory->setMemcacheMaxBytes($server['memcache_max_bytes']);
         $serverHistory->setTime(time());
         $this->entityManager->persist($serverHistory);
         $this->entityManager->flush();
