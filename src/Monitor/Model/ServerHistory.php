@@ -157,7 +157,7 @@ class ServerHistory
 
     public function setMysqlSlowQuery($msq)
     {
-        $this->mysq_slow_query = $msq;
+        $this->mysql_slow_query = $msq;
     }
 
     public function setMysqlQueryAvg($mqv)
