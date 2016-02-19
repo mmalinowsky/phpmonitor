@@ -199,5 +199,4 @@ class ServerHistory
     {
         $this->time = $time;
     }
-
 }

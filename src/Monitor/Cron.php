@@ -1,31 +1,46 @@
 <?php
 namespace Monitor;
 
+use Monitor\Notification\Trigger\Comparator\Comparator;
+use Monitor\Notification\Service\Factory as ServiceFactory;
+use Monitor\Notification\Trigger\TriggerMgr;
+use Monitor\Notification\Facade as NotificationFacade;
+use Monitor\Notification\NotificationMgr;
+use Monitor\Notification\Parser as NotificationParser;
+use Monitor\Format\Factory as FormatFactory;
+use Monitor\Utils\PercentageHelper;
+use Monitor\Client\Http\Http as Http;
+
 require __DIR__.'/bootstrap.php';
 
-$formatFactory = new Format\Factory;
-$notificationMgr = new Notification\NotificationMgr(
-    new Notification\Parser,
-    $entityManager->getRepository('Monitor\Model\Notification')
-);
-$triggerMgr = new Notification\Trigger\TriggerMgr(
-    $notificationMgr,
-    new Utils\PercentageHelper,
+$formatFactory = new FormatFactory;
+
+$notificationMgr = new NotificationMgr(
+    $config->get('notification')['data'],
+    new NotificationParser,
+    $config->get('notification_delay_in_hours'),
     $entityManager
 );
-$triggerMgr->setComparator(new Notification\Trigger\Comparator\Comparator);
-$format = $formatFactory->build($config->get('format'));
+
+$triggerMgr = new TriggerMgr(
+    $notificationMgr,
+    new PercentageHelper,
+    $entityManager
+);
+
+$triggerMgr->setComparator(new Comparator);
+
 $monitor = new Monitor(
     $config,
     new Notification\Facade(
         $config,
-        $notificationMgr,
         $triggerMgr,
-        new Notification\Service\Factory,
+        new ServiceFactory,
         $entityManager->getRepository('Monitor\Model\Service')
     ),
-    $format,
+    $formatFactory->build($config->get('format')),
     $entityManager
 );
-$monitor->setClient(new Client\Http\Http);
+
+$monitor->setClient(new Http);
 $monitor->run();

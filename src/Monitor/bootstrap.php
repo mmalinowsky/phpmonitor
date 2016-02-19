@@ -19,5 +19,5 @@ $dbParams =
     'dbname'    => $config->get('database'),
 ];
 
-$ormConfig = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode);
-$entityManager = EntityManager::create($dbParams, $ormConfig);
+$DoctrineConfig = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode);
+$entityManager = EntityManager::create($dbParams, $DoctrineConfig);

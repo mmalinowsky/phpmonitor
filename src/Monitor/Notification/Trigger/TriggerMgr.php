@@ -14,15 +14,14 @@ class TriggerMgr extends Observable
     
     private $triggers;
     private $comparator;
-    private $notificationDelay;
     private $notificationData;
     private $notificationMgr;
     private $percentageHelper;
     private $entityManager;
     private $serviceRepository;
+
     public function __construct(NotificationMgr $notifcationMgr, PercentageHelper $percentageHelper, $entityManager)
     {
-        $this->notificationDelay = 0;
         $this->notificationMgr = $notifcationMgr;
         $this->entityManager = $entityManager;
         $this->percentageHelper = $percentageHelper;
@@ -40,11 +39,6 @@ class TriggerMgr extends Observable
         $this->notificationData = $data;
     }
 
-    public function setNotificationDelay($delay)
-    {
-        $this->notificationDelay = $delay;
-    }
-
     /**
      * Send notification to notification service
      *
@@ -57,58 +51,6 @@ class TriggerMgr extends Observable
         foreach ($this->observers as $observer) {
             $observer->sendNotification($notification, $this->notificationData);
         }
-    }
-
-    /**
-     * Prepare notification
-     *
-     * @access private
-     * @param  Trigger $trigger
-     * @param  array   $serverData
-     * @return Monitor\Notification\Notification
-     */
-    private function prepareNotification(Trigger $trigger, array $serverData)
-    {
-        $notificationId = $trigger->getNotificationId();
-        $notification = $this->notificationMgr->getNotificationById($notificationId);
-        //merge server data and trigger properties so we can use them in fulfilling notification message
-        $data = array_merge($serverData, $trigger->toArray());
-        $this->notificationMgr->parseNotification($notification, $data);
-        return $notification;
-    }
-
-    /**
-     * Check if same type of notification for concret server has been sent already
-     *
-     * @access private
-     * @param  int $triggerId
-     * @param  int $serverId
-     * @return boolean
-     */
-    private function hasNotificationDelayExpired($triggerId, $serverId, $msDelay)
-    {
-        $queryBuilder = $this->entityManager->createQueryBuilder();
-        $queryBuilder->select('nl.created')
-            ->from('Monitor\Model\NotificationLog', 'nl')
-            ->where('nl.trigger_id = ?1')
-            ->andWhere('nl.server_id = ?2')
-            ->orderBy('nl.created', 'DESC')
-            ->setMaxResults(1)
-            ->setParameters
-            (
-                [
-                    '1' => $triggerId,
-                    '2' => $serverId
-                ]
-            );
-        $query = $queryBuilder->getQuery();
-        $queryResult = $query->getResult();
-        if(! $queryResult) {
-            return true;
-        }
-        $timeOfLastFiredUpTrigger = $queryResult[0]['created'];
-        $timeDiff = $timeOfLastFiredUpTrigger - time();
-        return ($this->notificationDelay * $msDelay + $timeDiff >= 0) ? false : true;
     }
 
     /**
@@ -164,7 +106,7 @@ class TriggerMgr extends Observable
      */
     private function fireTrigger(Trigger $trigger, array $serverData, $msDelay)
     {
-        if (! $this->hasNotificationDelayExpired(
+        if (! $this->notificationMgr->hasNotificationDelayExpired(
             $trigger->getId(),
             $serverData['server_id'],
             $msDelay
@@ -172,7 +114,7 @@ class TriggerMgr extends Observable
             return false;
         }
 
-        $notification = $this->prepareNotification($trigger, $serverData);
+        $notification = $this->notificationMgr->prepareNotification($trigger, $serverData);
         $this->notifyServices($notification);
         $log = new NotificationLog;
         $log->setTriggerId($trigger->getId());

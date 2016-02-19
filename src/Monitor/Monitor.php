@@ -130,9 +130,7 @@ class Monitor
 
         if (! $resources) {
             $resources = json_encode(
-                array(
-                'status' => 'offline'
-                )
+                ['status' => 'offline']
             );
         }
         $decodedData = $this->format->convertToArray($resources);

@@ -2,6 +2,7 @@
 namespace Monitor\Notification;
 
 use Monitor\Model\Notification;
+use Monitor\Model\Trigger;
 
 class NotificationMgr
 {
@@ -9,16 +10,21 @@ class NotificationMgr
     private $notificationData;
     private $observers;
     private $repository;
-    
-    public function __construct(Parser $notificationParser, $repository)
-    {
-        $this->notificationParser = $notificationParser;
-        $this->repository = $repository;
-    }
+    private $notificationDelay;
+    private $entityManager;
 
-    public function setNotificationData($data)
-    {
-        $this->notificationData = $data;
+    public function __construct(
+        $notificationData,
+        Parser $notificationParser,
+        $notificationDelay,
+        $entityManager
+    ) {
+    
+        $this->notificationData = $notificationData;
+        $this->notificationParser = $notificationParser;
+        $this->notificationDelay = $notificationDelay;
+        $this->repository = $entityManager->getRepository('Monitor\Model\Notification');
+        $this->entityManager = $entityManager;
     }
 
     public function getNotificationById($id)
@@ -44,5 +50,57 @@ class NotificationMgr
         foreach ($this->observers as $observer) {
             $observer->sendNotification($notification, $this->notificationData);
         }
+    }
+
+
+    /**
+     * Prepare notification
+     *
+     * @access private
+     * @param  Trigger $trigger
+     * @param  array   $serverData
+     * @return Monitor\Notification\Notification
+     */
+    public function prepareNotification(Trigger $trigger, array $serverData)
+    {
+        $notificationId = $trigger->getNotificationId();
+        $notification = $this->getNotificationById($notificationId);
+        //merge server data and trigger properties so we can use them in fulfilling notification message
+        $data = array_merge($serverData, $trigger->toArray());
+        $this->parseNotification($notification, $data);
+        return $notification;
+    }
+
+    /**
+     * Check if same type of notification for concret server has been sent already
+     *
+     * @access private
+     * @param  int $triggerId
+     * @param  int $serverId
+     * @return boolean
+     */
+    public function hasNotificationDelayExpired($triggerId, $serverId, $msDelay)
+    {
+        $queryBuilder = $this->entityManager->createQueryBuilder();
+        $queryBuilder->select('nl.created')
+            ->from('Monitor\Model\NotificationLog', 'nl')
+            ->where('nl.trigger_id = ?1')
+            ->andWhere('nl.server_id = ?2')
+            ->orderBy('nl.created', 'DESC')
+            ->setMaxResults(1)
+            ->setParameters(
+                [
+                    '1' => $triggerId,
+                    '2' => $serverId
+                ]
+            );
+        $query = $queryBuilder->getQuery();
+        $queryResult = $query->getResult();
+        if (! $queryResult) {
+            return true;
+        }
+        $timeOfLastFiredUpTrigger = $queryResult[0]['created'];
+        $timeDiff = $timeOfLastFiredUpTrigger - time();
+        return ($this->notificationDelay * $msDelay + $timeDiff >= 0) ? false : true;
     }
 }

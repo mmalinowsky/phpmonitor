@@ -7,19 +7,14 @@ use Monitor\Notification\Service\Factory as ServiceFactory;
 
 class Facade
 {
-    private $notificationMgr;
     private $triggerMgr;
 
     public function __construct(
         ConfigInterface $config,
-        NotificationMgr $notificationMgr,
         TriggerMgr $triggerMgr,
         ServiceFactory $serviceFactory
     ) {
         $this->triggerMgr = $triggerMgr;
-        $this->notificationMgr = $notificationMgr;
-        $this->notificationMgr->setNotificationData($config->get('notification')['data']);
-        $this->triggerMgr->setNotificationDelay($config->get('notification_delay_in_hours'));
         $this->addObservers($config->get('notification')['services'], $serviceFactory);
     }
 
