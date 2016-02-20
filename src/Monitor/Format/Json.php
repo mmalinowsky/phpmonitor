@@ -7,7 +7,7 @@ class Json implements FormatInterface
     /**
      * Convert json resources to array
      *
-     * @param string $data
+     * @param  string $data
      * @return array $array
      */
     public function convertToArray($data)

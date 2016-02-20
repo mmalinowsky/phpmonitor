@@ -5,8 +5,9 @@ class PercentageHelper
 {
     /**
      * Calculate service percentage
+     *
      * @access public
-     * @param array $serverData server history
+     * @param  array $serverData server history
      * @return double
      */
     public function getServicePercentage(array $serverData, $service)
@@ -21,9 +22,10 @@ class PercentageHelper
 
     /**
      * Get percentage
+     *
      * @access private
-     * @param $value1
-     * @param $value2
+     * @param  $value1
+     * @param  $value2
      * @return double
      */
     private function getPercentage($value1, $value2)

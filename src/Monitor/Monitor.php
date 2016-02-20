@@ -2,6 +2,7 @@
 namespace Monitor;
 
 use Monitor\Notification\Facade;
+use Monitor\Model\ServerHistory;
 use Monitor\Client\ClientInterface;
 use Monitor\Format\FormatInterface;
 use Monitor\Config\ConfigInterface;
@@ -106,9 +107,9 @@ class Monitor
     /**
      * Fill array with concret value when can't find same key in $arrayTofill as in $struct array
      *
-     * @param array $struct
-     * @param array $arrayToFill
-     * @param int $value
+     * @param  array $struct
+     * @param  array $arrayToFill
+     * @param  int   $value
      * @return array $arrayMerged
      */
     private function fillArrayWithDefaultValue(array $struct, array $arrayToFill, $value = 0)
@@ -140,7 +141,7 @@ class Monitor
 
     private function addServerHistory($server)
     {
-        $serverHistory = new Model\ServerHistory;
+        $serverHistory = new ServerHistory;
         $serverHistory->setServerId($server['server_id']);
         $serverHistory->setHostname($server['hostname']);
         $serverHistory->setStatus($server['status']);

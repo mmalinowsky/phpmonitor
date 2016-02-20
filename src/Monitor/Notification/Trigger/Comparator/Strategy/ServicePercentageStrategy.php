@@ -7,8 +7,13 @@ use Monitor\Utils\PercentageHelper;
 
 class ServicePercentageStrategy implements StrategyInterface
 {
-    public function compare(Trigger $trigger, array $serverData, $serviceRepository, PercentageHelper $percentageHelper, ComparatorInterface $comparator)
-    {
+    public function compare(
+        Trigger $trigger,
+        array $serverData,
+        $serviceRepository,
+        PercentageHelper $percentageHelper,
+        ComparatorInterface $comparator
+    ) {
         $service = $serviceRepository->findOneBy(['name' => $trigger->getServiceName()]);
 
         if (! $service) {

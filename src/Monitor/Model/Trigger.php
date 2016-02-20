@@ -37,6 +37,7 @@ class Trigger
     
     /**
      * Return properties
+     *
      * @return array
      */
     public function toArray()

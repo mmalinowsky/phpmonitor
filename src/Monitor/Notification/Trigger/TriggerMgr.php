@@ -20,8 +20,11 @@ class TriggerMgr extends Observable
     private $entityManager;
     private $serviceRepository;
 
-    public function __construct(NotificationMgr $notifcationMgr, PercentageHelper $percentageHelper, $entityManager)
-    {
+    public function __construct(
+        NotificationMgr $notifcationMgr,
+        PercentageHelper $percentageHelper,
+        $entityManager
+    ) {
         $this->notificationMgr = $notifcationMgr;
         $this->entityManager = $entityManager;
         $this->percentageHelper = $percentageHelper;
@@ -80,7 +83,13 @@ class TriggerMgr extends Observable
     {
         $this->checkIsComparatorValid();
         $strategy = new StrategyContext($trigger->getType());
-        return $strategy->compare($trigger, $serverData, $this->serviceRepository, $this->percentageHelper, $this->comparator);
+        return $strategy->compare(
+            $trigger,
+            $serverData,
+            $this->serviceRepository,
+            $this->percentageHelper,
+            $this->comparator
+        );
     }
 
     /**

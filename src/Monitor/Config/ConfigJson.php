@@ -30,7 +30,7 @@ class ConfigJson implements ConfigInterface
     /**
      * Decode json string to array
      *
-     * @param $data
+     * @param  $data
      * @return array $decodedData
      */
     private function decode($data)

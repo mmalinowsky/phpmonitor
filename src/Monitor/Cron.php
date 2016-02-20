@@ -32,7 +32,7 @@ $triggerMgr->setComparator(new Comparator);
 
 $monitor = new Monitor(
     $config,
-    new Notification\Facade(
+    new NotificationFacade(
         $config,
         $triggerMgr,
         new ServiceFactory,

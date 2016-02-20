@@ -8,8 +8,13 @@ use Monitor\Utils\PercentageHelper;
 class DefaultStrategy implements StrategyInterface
 {
 
-    public function compare(Trigger $trigger, array $serverData, $serviceRepository, PercentageHelper $percentageHelper, ComparatorInterface $comparator)
-    {
+    public function compare(
+        Trigger $trigger,
+        array $serverData,
+        $serviceRepository,
+        PercentageHelper $percentageHelper,
+        ComparatorInterface $comparator
+    ) {
         if (! isset($serverData[$trigger->getServiceName()])) {
             return false;
         }

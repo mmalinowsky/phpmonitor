@@ -21,9 +21,20 @@ class Context
         }
     }
 
-    public function compare(Trigger $trigger, array $serverData, $serviceRepository, PercentageHelper $percentageHelper, Comparator $comparator)
-    {
-        return $this->strategy->compare($trigger, $serverData, $serviceRepository, $percentageHelper, $comparator);
+    public function compare(
+        Trigger $trigger,
+        array $serverData,
+        $serviceRepository,
+        PercentageHelper $percentageHelper,
+        Comparator $comparator
+    ) {
+        return $this->strategy->compare(
+            $trigger,
+            $serverData,
+            $serviceRepository,
+            $percentageHelper,
+            $comparator
+        );
     }
 
     public function getStrategy()
