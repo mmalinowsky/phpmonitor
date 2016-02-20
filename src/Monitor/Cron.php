@@ -10,6 +10,7 @@ use Monitor\Notification\Parser as NotificationParser;
 use Monitor\Format\Factory as FormatFactory;
 use Monitor\Utils\PercentageHelper;
 use Monitor\Client\Http\Http as Http;
+use Monitor\Notification\NotificationLogService;
 
 require __DIR__.'/bootstrap.php';
 
@@ -25,7 +26,9 @@ $notificationMgr = new NotificationMgr(
 $triggerMgr = new TriggerMgr(
     $notificationMgr,
     new PercentageHelper,
-    $entityManager
+    $entityManager->getRepository('Monitor\Model\Trigger'),
+    $entityManager->getRepository('Monitor\Model\Service'),
+    new NotificationLogService($entityManager)
 );
 
 $triggerMgr->setComparator(new Comparator);

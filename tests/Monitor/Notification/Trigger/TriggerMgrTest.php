@@ -2,12 +2,23 @@
 namespace Monitor\Notification\Trigger;
 
 use Monitor\Utils\PercentageHelper;
+use Monitor\Notification\NotificationLogService;
 
 class TriggerMgrTest extends \PHPUnit_Framework_TestCase
 {
-    /*
+    
     public function setUp()
     {
+        $service = $this->getMockBuilder('Monitor\Model\Service')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $service->method('getName')
+            ->willReturn('Cpu Load');
+        $service->method('getDBColumns')
+            ->willReturn('sys_load:cpu_cores');
+        $service->method('getPercentages')
+            ->willReturn(1);
+
         $notificationMgr = $this->getMockBuilder('Monitor\Notification\NotificationMgr')
             ->disableOriginalConstructor()
             ->getMock();
@@ -15,34 +26,26 @@ class TriggerMgrTest extends \PHPUnit_Framework_TestCase
         $triggerRepository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
             ->disableOriginalConstructor()
             ->getMock();
-        $triggerRepository->method('findOneBy')
-            ->with($this->anything())
-            ->willReturn($this->prepareTrigger('>', 10, 'load'));
-$entityManager = $this->getMockBuilder('Doctrine\ORM\EntityManager')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $triggerRepository->method('getRepository')
-            ->with('Monitor\Model\Trigger')
-            ->willReturn($triggerRepository);
 
-$this->service = $this->getMockBuilder('Monitor\Model\Service')
+        $this->serviceRepository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
             ->disableOriginalConstructor()
             ->getMock();
-        $this->service->method('getDBColumns')
-            ->willReturn('sys_load:cpu_cores');
 
- $this->serviceRepository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+            $this->serviceRepository->method('findOneBy')
+                ->willReturn($service);
+
+        $notificationLogService = $this->getMockBuilder('Monitor\Notification\NotificationLogService')
             ->disableOriginalConstructor()
             ->getMock();
-        $this->serviceRepository->method('getDBColumns')
-            ->willReturn('sys_load:cpu_cores');
-        $this->serviceRepository->method('getPercentages')
-            ->willReturn(true);
-        $this->serviceRepository->method('findOneBy')
-            ->willReturn($this->service);
-        $this->triggers = new TriggerMgr($notificationMgr, new PercentageHelper, $entityManager);
-        $this->comparator = new Comparator\Comparator;
-        $this->triggers->setComparator($this->comparator);
+
+        $this->triggers = new TriggerMgr(
+            $notificationMgr,
+            new PercentageHelper,
+            $triggerRepository,
+            $this->serviceRepository,
+            $notificationLogService
+        );
+        $this->triggers->setComparator(new Comparator\Comparator);
     }
 
     private function prepareTrigger($operator, $value, $serviceName, $type = 'service')
@@ -92,5 +95,5 @@ $this->service = $this->getMockBuilder('Monitor\Model\Service')
         $reflectionProperty->setAccessible(true);
         return $reflectionProperty;
     }
-    */
+    
 }

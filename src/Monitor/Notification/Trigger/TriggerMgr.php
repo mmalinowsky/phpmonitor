@@ -8,6 +8,7 @@ use Monitor\Notification\Trigger\Comparator\Strategy\Context as StrategyContext;
 use Monitor\Utils\PercentageHelper;
 use Monitor\Model\Trigger;
 use Monitor\Model\NotificationLog;
+use Monitor\Notification\NotificationLogService;
 
 class TriggerMgr extends Observable
 {
@@ -17,19 +18,21 @@ class TriggerMgr extends Observable
     private $notificationData;
     private $notificationMgr;
     private $percentageHelper;
-    private $entityManager;
     private $serviceRepository;
+    private $notificationLogService;
 
     public function __construct(
         NotificationMgr $notifcationMgr,
         PercentageHelper $percentageHelper,
-        $entityManager
+        $triggerRepository,
+        $serviceRepository,
+        NotificationLogService $notificationLogService
     ) {
         $this->notificationMgr = $notifcationMgr;
-        $this->entityManager = $entityManager;
         $this->percentageHelper = $percentageHelper;
-        $this->triggers = $entityManager->getRepository('Monitor\Model\Trigger')->findAll();
-        $this->serviceRepository = $entityManager->getRepository('Monitor\Model\Service');
+        $this->triggers = $triggerRepository->findAll();
+        $this->serviceRepository = $serviceRepository;
+        $this->notificationLogService = $notificationLogService;
     }
 
     public function setComparator(Comparator $comparator)
@@ -130,8 +133,7 @@ class TriggerMgr extends Observable
         $log->setServerId($serverData['server_id']);
         $log->setMessage($notification->getMessage());
         $log->setCreated(time());
-        $this->entityManager->persist($log);
-        $this->entityManager->flush();
+        $this->notificationLogService->save($log);
         return true;
     }
 }
