@@ -8,10 +8,9 @@ class NotificationMgr
 {
     private $notificationParser;
     private $notificationData;
-    private $observers;
-    private $repository;
     private $notificationDelay;
     private $notificationLogService;
+    private $repository;
 
     public function __construct(
         $notificationData,
@@ -24,8 +23,8 @@ class NotificationMgr
         $this->notificationData = $notificationData;
         $this->notificationParser = $notificationParser;
         $this->notificationDelay = $notificationDelay;
-        $this->repository = $repository;
         $this->notificationLogService = $notificationLogService;
+        $this->repository = $repository;
     }
 
     public function getNotificationById($id)
@@ -38,21 +37,6 @@ class NotificationMgr
     {
         $this->notificationParser->parse($notification, $data);
     }
-
-    /**
-     * Send notification to notification service
-     *
-     * @access public
-     * @param  Notification $notification
-     * @return
-     */
-    public function notifyAllServices(Notification $notification)
-    {
-        foreach ($this->observers as $observer) {
-            $observer->sendNotification($notification, $this->notificationData);
-        }
-    }
-
 
     /**
      * Prepare notification
