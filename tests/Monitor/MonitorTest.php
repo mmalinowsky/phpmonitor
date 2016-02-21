@@ -26,14 +26,20 @@ class MonitorTest extends \PHPUnit_Framework_TestCase
             ->setMethods(['findAll', 'getRepository'])
             ->disableOriginalConstructor()
             ->getMock();
-        
+        $serverRepository = $this->getMockBuilder('\Doctrine\ORM\EntityRepository')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $serverHistoryService = $this->getMockBuilder('\Monitor\Service\ServerHistory')
+            ->disableOriginalConstructor()
+            ->getMock();
         $entityManager->method('getRepository')
             ->willReturn($entityManager);
         $this->monitor = new Monitor(
             $this->config,
             $this->notificationFacade,
             $this->format,
-            $entityManager
+            $serverRepository,
+            $serverHistoryService
         );
         $this->struct = ['one', 'test2'];
         $this->arrayToFill = ['one' => 1, 'two' => 2, 'test' => 5];

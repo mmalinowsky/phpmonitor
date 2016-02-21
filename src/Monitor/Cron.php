@@ -10,7 +10,9 @@ use Monitor\Notification\Parser as NotificationParser;
 use Monitor\Format\Factory as FormatFactory;
 use Monitor\Utils\PercentageHelper;
 use Monitor\Client\Http\Http as Http;
-use Monitor\Notification\NotificationLogService;
+use Monitor\Service\NotificationLog as NotificationLogService;
+use Monitor\Service\ServerHistory as ServerHistoryService;
+
 
 require __DIR__.'/bootstrap.php';
 
@@ -20,7 +22,8 @@ $notificationMgr = new NotificationMgr(
     $config->get('notification')['data'],
     new NotificationParser,
     $config->get('notification_delay_in_hours'),
-    $entityManager
+    new NotificationLogService($entityManager),
+    $entityManager->getRepository('Monitor\Model\Notification')
 );
 
 $triggerMgr = new TriggerMgr(
@@ -42,7 +45,8 @@ $monitor = new Monitor(
         $entityManager->getRepository('Monitor\Model\Service')
     ),
     $formatFactory->build($config->get('format')),
-    $entityManager
+    $entityManager->getRepository('Monitor\Model\Server'),
+    new ServerHistoryService($entityManager)
 );
 
 $monitor->setClient(new Http);

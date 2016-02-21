@@ -8,7 +8,7 @@ use Monitor\Notification\Trigger\Comparator\Strategy\Context as StrategyContext;
 use Monitor\Utils\PercentageHelper;
 use Monitor\Model\Trigger;
 use Monitor\Model\NotificationLog;
-use Monitor\Notification\NotificationLogService;
+use Monitor\Service\NotificationLog as NotificationLogService;
 
 class TriggerMgr extends Observable
 {

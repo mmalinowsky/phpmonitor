@@ -6,7 +6,8 @@ use Monitor\Model\ServerHistory;
 use Monitor\Client\ClientInterface;
 use Monitor\Format\FormatInterface;
 use Monitor\Config\ConfigInterface;
-use Doctrine\ORM\EntityManager;
+use Monitor\Model\Server;
+use Monitor\Service\ServerHistory as ServerHistoryService;
 
 class Monitor
 {
@@ -17,25 +18,35 @@ class Monitor
     private $notificationFacade;
     private $client;
     private $format;
-    private $entityManager;
+    private $serverModel;
+    private $serverHistoryService;
 
     public function __construct(
         ConfigInterface $config,
         Facade $notificationFacade,
         FormatInterface $format,
-        EntityManager $entityManager
+        $serverRepository,
+        ServerHistoryService $serverHistoryService
     ) {
         $this->config = $config;
-        $this->notificationFacade = $notificationFacade;
         $this->format = $format;
-        $this->entityManager = $entityManager;
+        $this->serverRepository = $serverRepository;
         $this->serversConfig = $this->getServersConfig();
         $this->serverHistoryStruct = $this->getServerHistoryStructure();
+        $this->notificationFacade = $notificationFacade;
+        $this->serverHistoryService = $serverHistoryService;
     }
     
     public function setClient(ClientInterface $client)
     {
         $this->client = $client;
+    }
+
+    public function run()
+    {
+        $this->isClientValid();
+        array_map([$this, "checkServer"], $this->serversConfig);
+        $this->deleteOldHistoryRecords();
     }
 
     private function checkServer($serverConfig)
@@ -48,25 +59,18 @@ class Monitor
             ]
         );
 
-            $serverData = $this->getServerData();
-            $serverData['server_id'] = $serverConfig->getId();
-            $serverData['hostname'] = $serverConfig->getName();
+        $serverData = $this->getServerData();
+        $serverData['server_id'] = $serverConfig->getId();
+        $serverData['hostname'] = $serverConfig->getName();
 
         if ($serverData['status'] !== 'online') {
             $serverData['status'] = 'offline';
         }
-            $this->addServerHistory($serverData);
-            $this->notificationFacade->checkTriggers(
-                $serverData,
-                $this->config->get('ms_in_hour')
-            );
-    }
-
-    public function run()
-    {
-        $this->isClientValid();
-        array_map([$this, "checkServer"], $this->serversConfig);
-        $this->deleteOldHistoryRecords();
+        $this->addServerHistory($serverData);
+        $this->notificationFacade->checkTriggers(
+            $serverData,
+            $this->config->get('ms_in_hour')
+        );
     }
 
     private function isClientValid()
@@ -80,17 +84,12 @@ class Monitor
     {
         $expireTimeInMs = $this->config->get('history_expire_time_in_days') * $this->config->get('ms_in_day');
         $expireTime = time() - $expireTimeInMs;
-        $query = $this->entityManager
-            ->createQuery('DELETE from \Monitor\Model\ServerHistory s where s.time < ?1');
-        $query->setParameter('1', $expireTime);
-        $query->execute();
+        $this->serverHistoryService->deleteRecordsByTime($expireTime);
     }
 
     private function getServersConfig()
     {
-        $serverConfigs = $this->entityManager
-            ->getRepository('\Monitor\Model\Server')
-            ->findAll();
+        $serverConfigs = $this->serverRepository->findAll();
         return $serverConfigs;
     }
 
@@ -163,7 +162,6 @@ class Monitor
         $serverHistory->setMemcacheBytes($server['memcache_bytes']);
         $serverHistory->setMemcacheMaxBytes($server['memcache_max_bytes']);
         $serverHistory->setTime(time());
-        $this->entityManager->persist($serverHistory);
-        $this->entityManager->flush();
+        $this->serverHistoryService->save($serverHistory);
     }
 }

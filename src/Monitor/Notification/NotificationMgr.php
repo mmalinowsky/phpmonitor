@@ -11,20 +11,21 @@ class NotificationMgr
     private $observers;
     private $repository;
     private $notificationDelay;
-    private $entityManager;
+    private $notificationLogService;
 
     public function __construct(
         $notificationData,
         Parser $notificationParser,
         $notificationDelay,
-        $entityManager
+        $notificationLogService,
+        $repository
     ) {
     
         $this->notificationData = $notificationData;
         $this->notificationParser = $notificationParser;
         $this->notificationDelay = $notificationDelay;
-        $this->repository = $entityManager->getRepository('Monitor\Model\Notification');
-        $this->entityManager = $entityManager;
+        $this->repository = $repository;
+        $this->notificationLogService = $notificationLogService;
     }
 
     public function getNotificationById($id)
@@ -81,21 +82,10 @@ class NotificationMgr
      */
     public function hasNotificationDelayExpired($triggerId, $serverId, $msDelay)
     {
-        $queryBuilder = $this->entityManager->createQueryBuilder();
-        $queryBuilder->select('nl.created')
-            ->from('Monitor\Model\NotificationLog', 'nl')
-            ->where('nl.trigger_id = ?1')
-            ->andWhere('nl.server_id = ?2')
-            ->orderBy('nl.created', 'DESC')
-            ->setMaxResults(1)
-            ->setParameters(
-                [
-                    '1' => $triggerId,
-                    '2' => $serverId
-                ]
-            );
-        $query = $queryBuilder->getQuery();
-        $queryResult = $query->getResult();
+        $queryResult = $this->notificationLogService->getLastForTrigger(
+            $triggerId,
+            $serverId
+        );
         if (! $queryResult) {
             return true;
         }

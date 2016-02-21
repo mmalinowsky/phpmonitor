@@ -2,7 +2,6 @@
 namespace Monitor\Notification\Trigger;
 
 use Monitor\Utils\PercentageHelper;
-use Monitor\Notification\NotificationLogService;
 
 class TriggerMgrTest extends \PHPUnit_Framework_TestCase
 {
@@ -31,10 +30,10 @@ class TriggerMgrTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-            $this->serviceRepository->method('findOneBy')
-                ->willReturn($service);
+        $this->serviceRepository->method('findOneBy')
+            ->willReturn($service);
 
-        $notificationLogService = $this->getMockBuilder('Monitor\Notification\NotificationLogService')
+        $notificationLogService = $this->getMockBuilder('Monitor\Service\NotificationLog')
             ->disableOriginalConstructor()
             ->getMock();
 
