@@ -8,15 +8,6 @@ class TriggerMgrTest extends \PHPUnit_Framework_TestCase
     
     public function setUp()
     {
-        $service = $this->getMockBuilder('Monitor\Model\Service')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $service->method('getName')
-            ->willReturn('Cpu Load');
-        $service->method('getDBColumns')
-            ->willReturn('sys_load:cpu_cores');
-        $service->method('getPercentages')
-            ->willReturn(1);
 
         $notificationMgr = $this->getMockBuilder('Monitor\Notification\NotificationMgr')
             ->disableOriginalConstructor()
@@ -29,7 +20,6 @@ class TriggerMgrTest extends \PHPUnit_Framework_TestCase
         $this->serviceRepository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
             ->disableOriginalConstructor()
             ->getMock();
-
         $this->serviceRepository->method('findOneBy')
             ->willReturn($service);
 
