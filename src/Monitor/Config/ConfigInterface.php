@@ -3,6 +3,6 @@ namespace Monitor\Config;
 
 interface ConfigInterface
 {
-    public function loadFromFile($filename);
-    public function get($name, $default);
+    public function __construct($filename = null, array $configValues = []);
+    public function get($name, $default = null);
 }

@@ -1,14 +1,14 @@
 <?php
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
+use Monitor\Config\ConfigJson as Config;
 
 require __DIR__.'/../../vendor/autoload.php';
 
 $paths = ["Model"];
 $isDevMode = false;
 
-$config = new Monitor\Config\ConfigJson;
-$config->loadFromFile('Config.json');
+$config = new Config('Config.json');
 
 $dbParams =
 [

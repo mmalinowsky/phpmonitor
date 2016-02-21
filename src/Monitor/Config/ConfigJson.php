@@ -3,9 +3,19 @@ namespace Monitor\Config;
 
 class ConfigJson implements ConfigInterface
 {
-    private $data = [];
 
-    public function loadFromFile($filename)
+    private $data;
+
+    public function __construct($filename = null, array $configValues = [])
+    {
+        $this->data = $configValues;
+
+        if ($filename) {
+            $this->loadFromFile($filename);
+        }
+    }
+
+    private function loadFromFile($filename)
     {
         $fullPath = $this->getFullPath($filename);
         $this->isFileReadable($fullPath);

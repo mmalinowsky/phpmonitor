@@ -3,11 +3,12 @@ namespace Monitor\Config;
 
 class ConfigJsonTest extends \PHPUnit_Framework_TestCase
 {
+
     public function setUp()
     {
         //todo vfs
-        $this->config = new ConfigJson();
-        $this->config->loadFromFile('Config.json');
+        $configData = ['format' => 'json'];
+        $this->config = new ConfigJson(null, $configData);
     }
 
     public function testLoadingConfigFromFile()
