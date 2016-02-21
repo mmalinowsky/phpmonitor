@@ -7,16 +7,16 @@ use Monitor\Notification\Trigger\TriggerMgr;
 use Monitor\Notification\Facade as NotificationFacade;
 use Monitor\Notification\NotificationMgr;
 use Monitor\Notification\Parser as NotificationParser;
+use Monitor\Service\NotificationLog as NotificationLogService;
+use Monitor\Service\ServerHistory as ServerHistoryService;
 use Monitor\Format\Factory as FormatFactory;
 use Monitor\Utils\PercentageHelper;
 use Monitor\Client\Http\Http as Http;
-use Monitor\Service\NotificationLog as NotificationLogService;
-use Monitor\Service\ServerHistory as ServerHistoryService;
-
 
 require __DIR__.'/bootstrap.php';
 
-$formatFactory = new FormatFactory;
+$format = new FormatFactory;
+$format = $format->build($config->get('format'));
 
 $notificationMgr = new NotificationMgr(
     $config->get('notification')['data'],
@@ -31,10 +31,9 @@ $triggerMgr = new TriggerMgr(
     new PercentageHelper,
     $entityManager->getRepository('Monitor\Model\Trigger'),
     $entityManager->getRepository('Monitor\Model\Service'),
-    new NotificationLogService($entityManager)
+    new NotificationLogService($entityManager),
+    new Comparator
 );
-
-$triggerMgr->setComparator(new Comparator);
 
 $monitor = new Monitor(
     $config,
@@ -44,7 +43,7 @@ $monitor = new Monitor(
         new ServiceFactory,
         $entityManager->getRepository('Monitor\Model\Service')
     ),
-    $formatFactory->build($config->get('format')),
+    $format,
     $entityManager->getRepository('Monitor\Model\Server'),
     new ServerHistoryService($entityManager)
 );

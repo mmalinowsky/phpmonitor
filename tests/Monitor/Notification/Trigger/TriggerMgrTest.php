@@ -42,9 +42,9 @@ class TriggerMgrTest extends \PHPUnit_Framework_TestCase
             new PercentageHelper,
             $triggerRepository,
             $this->serviceRepository,
-            $notificationLogService
+            $notificationLogService,
+            new Comparator\Comparator
         );
-        $this->triggers->setComparator(new Comparator\Comparator);
     }
 
     private function prepareTrigger($operator, $value, $serviceName, $type = 'service')

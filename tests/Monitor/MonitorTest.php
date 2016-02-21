@@ -5,19 +5,15 @@ class MonitorTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $serversConfig = new Model\Server;
-        $serversConfig->setName('Test server');
-        $serversConfig->setUrlPath('http://api.dev');
-        $serversConfig->setPingHostname('google.com');
-        $this->config = $this->getMockBuilder('\Monitor\Config\ConfigJson')
+        $config = $this->getMockBuilder('\Monitor\Config\ConfigJson')
                              ->setMockClassName('Config')
                              ->getMock();
        
-        $this->notificationFacade = $this->getMockBuilder('\Monitor\Notification\Facade')
+        $notificationFacade = $this->getMockBuilder('\Monitor\Notification\Facade')
                                          ->setMockClassName('Facade')
                                          ->disableOriginalConstructor()
                                          ->getMock();
-        $this->format = $this->getMockBuilder('\Monitor\Format\FormatInterface')
+        $format = $this->getMockBuilder('\Monitor\Format\FormatInterface')
                                         ->setMockClassName('FormatInterface')
                                         ->disableOriginalConstructor()
                                         ->getMock();
@@ -30,9 +26,9 @@ class MonitorTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $this->monitor = new Monitor(
-            $this->config,
-            $this->notificationFacade,
-            $this->format,
+            $config,
+            $notificationFacade,
+            $format,
             $serverRepository,
             $serverHistoryService
         );

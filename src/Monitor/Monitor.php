@@ -6,9 +6,8 @@ use Monitor\Model\ServerHistory;
 use Monitor\Client\ClientInterface;
 use Monitor\Format\FormatInterface;
 use Monitor\Config\ConfigInterface;
-use Monitor\Model\Server;
 use Monitor\Service\ServerHistory as ServerHistoryService;
-
+use Doctrine\ORM\EntityRepository;
 class Monitor
 {
     
@@ -18,14 +17,14 @@ class Monitor
     private $notificationFacade;
     private $client;
     private $format;
-    private $serverModel;
     private $serverHistoryService;
+    private $serverRepository;
 
     public function __construct(
         ConfigInterface $config,
         Facade $notificationFacade,
         FormatInterface $format,
-        $serverRepository,
+        EntityRepository $serverRepository,
         ServerHistoryService $serverHistoryService
     ) {
         $this->config = $config;

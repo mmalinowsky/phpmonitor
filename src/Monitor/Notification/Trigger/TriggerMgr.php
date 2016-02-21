@@ -26,17 +26,14 @@ class TriggerMgr extends Observable
         PercentageHelper $percentageHelper,
         $triggerRepository,
         $serviceRepository,
-        NotificationLogService $notificationLogService
+        NotificationLogService $notificationLogService,
+        Comparator $comparator
     ) {
         $this->notificationMgr = $notifcationMgr;
         $this->percentageHelper = $percentageHelper;
         $this->triggers = $triggerRepository->findAll();
         $this->serviceRepository = $serviceRepository;
         $this->notificationLogService = $notificationLogService;
-    }
-
-    public function setComparator(Comparator $comparator)
-    {
         $this->comparator = $comparator;
     }
 
