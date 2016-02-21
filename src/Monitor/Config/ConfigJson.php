@@ -13,10 +13,11 @@ class ConfigJson implements ConfigInterface
         $this->data = $this->decode($configData);
     }
 
-    public function get($name)
+    public function get($name, $default = null)
     {
-        if (isset($this->data[$name])) {
-            return $this->data[$name];
+        if (isset($this->data[$name])
+          || $default) {
+            return isset($this->data[$name]) ? $this->data[$name] : $default;
         }
         throw new \Exception($name.' not found in Config');
     }
