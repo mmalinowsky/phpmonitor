@@ -11,6 +11,5 @@ class FakeSimple implements ServiceInterface
     {
         echo '[Mail] Send Notification - ';
         echo $notification->getMessage().PHP_EOL;
-        var_dump($data);
     }
 }

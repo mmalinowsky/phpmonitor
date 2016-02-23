@@ -94,6 +94,5 @@ class TriggerMgrTest extends \PHPUnit_Framework_TestCase
         $reflectionProperty = $reflection->getProperty($propertyName);
         $reflectionProperty->setAccessible(true);
         return $reflectionProperty;
-    }
-    
+    } 
 }
