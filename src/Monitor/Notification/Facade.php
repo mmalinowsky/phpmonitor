@@ -7,6 +7,11 @@ use Monitor\Notification\Service\Factory as ServiceFactory;
 
 class Facade
 {
+
+    /**
+     * Trigger manager
+     * @var Monitor\Notification\Trigger\TriggerMgr
+     */
     private $triggerMgr;
 
     public function __construct(
@@ -18,6 +23,12 @@ class Facade
         $this->addObservers($config->get('notification')['services'], $serviceFactory);
     }
 
+    /**
+     * Add observers
+     *
+     * @param array $observers
+     * @param \Monitor\Notification\Service\Factory $serviceFactory
+     */
     private function addObservers($observers, ServiceFactory $serviceFactory)
     {
         foreach ($observers as $observer) {

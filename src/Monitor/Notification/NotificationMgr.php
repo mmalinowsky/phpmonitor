@@ -3,36 +3,61 @@ namespace Monitor\Notification;
 
 use Monitor\Model\Notification;
 use Monitor\Model\Trigger;
+use Monitor\Service\NotificationLog as NotificationLogService;
+use Doctrine\ORM\EntityRepository;
 
 class NotificationMgr
 {
+
+    /**
+     * @var \Monitor\Notification\Parser
+     */
     private $notificationParser;
-    private $notificationData;
+    /**
+     * @var integer
+     */
     private $notificationDelay;
+    /**
+     * @var \Monitor\Service\NotificationLog
+     */
     private $notificationLogService;
+    /**
+     * Notification repository
+     * @var \Doctrine\ORM\EntityRepository
+     */
     private $repository;
 
     public function __construct(
-        $notificationData,
         Parser $notificationParser,
         $notificationDelay,
-        $notificationLogService,
-        $repository
+        NotificationLogService $notificationLogService,
+        EntityRepository $repository
     ) {
     
-        $this->notificationData = $notificationData;
         $this->notificationParser = $notificationParser;
         $this->notificationDelay = $notificationDelay;
         $this->notificationLogService = $notificationLogService;
         $this->repository = $repository;
     }
 
+    /**
+     * Get Notification by id
+     *
+     * @param int $id
+     * @return \Monitor\Model\Notification $notification
+     */
     public function getNotificationById($id)
     {
         $notification = $this->repository->find($id);
         return $notification;
     }
 
+    /**
+     * Parse notification message
+     *
+     * @param \Monitor\Model\Notification $notification
+     * @param array $data
+     */
     public function parseNotification(Notification $notification, $data)
     {
         $this->notificationParser->parse($notification, $data);
@@ -44,7 +69,7 @@ class NotificationMgr
      * @access private
      * @param  Trigger $trigger
      * @param  array   $serverData
-     * @return Monitor\Notification\Notification
+     * @return \Monitor\Notification\Notification
      */
     public function prepareNotification(Trigger $trigger, array $serverData)
     {

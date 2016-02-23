@@ -7,7 +7,7 @@ use \Monitor\Notification\Service\ServiceInterface as ServiceInterface;
 class FakeSmtp implements ServiceInterface
 {
     
-    public function sendNotification(Notification $notification, $data)
+    public function sendNotification(Notification $notification, array $data)
     {
         echo '[SMTP] Send notification'.PHP_EOL;
     }

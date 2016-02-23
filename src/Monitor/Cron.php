@@ -15,11 +15,10 @@ use Monitor\Client\Http\Http as Http;
 
 require __DIR__.'/bootstrap.php';
 
-$format = new FormatFactory;
-$format = $format->build($config->get('format'));
+$formatFactory = new FormatFactory;
+$format = $formatFactory->build($config->get('format'));
 
 $notificationMgr = new NotificationMgr(
-    $config->get('notification')['data'],
     new NotificationParser,
     $config->get('notification_delay_in_hours'),
     new NotificationLogService($entityManager),
@@ -34,6 +33,7 @@ $triggerMgr = new TriggerMgr(
     new NotificationLogService($entityManager),
     new Comparator
 );
+$triggerMgr->setNotificationData($config->get('notification')['data']);
 
 $monitor = new Monitor(
     $config,

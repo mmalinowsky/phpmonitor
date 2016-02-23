@@ -7,9 +7,10 @@ use Monitor\Notification\Service\ServiceInterface as ServiceInterface;
 class FakeSimple implements ServiceInterface
 {
 
-    public function sendNotification(Notification $notification, $data)
+    public function sendNotification(Notification $notification, array $data)
     {
         echo '[Mail] Send Notification - ';
         echo $notification->getMessage().PHP_EOL;
+        var_dump($data);
     }
 }

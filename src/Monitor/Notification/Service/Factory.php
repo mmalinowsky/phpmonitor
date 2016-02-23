@@ -3,7 +3,7 @@ namespace Monitor\Notification\Service;
 
 class Factory
 {
-    
+
     public function getService($className)
     {
         $className = __NAMESPACE__.'\\'.$className;

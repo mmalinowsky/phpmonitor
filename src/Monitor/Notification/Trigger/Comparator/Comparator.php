@@ -10,9 +10,9 @@ class Comparator implements ComparatorInterface
      * Comparing trigger's value
      *
      * @access public
-     * @param  $trigger
+     * @param  \Monitor\Model\Trigger $trigger
      * @param  $value
-     * @return boolean
+     * @return bool
      */
     public function compare(Trigger $trigger, $value)
     {
@@ -21,7 +21,7 @@ class Comparator implements ComparatorInterface
                 return $this->moreThan($value, $trigger->getValue());
 
             case "<":
-                return $this->lessThan($value, $trigger->getValue());
+                return ! $this->moreThan($value, $trigger->getValue());
 
             case "=":
                 return $this->equal($value, $trigger->getValue());
@@ -32,14 +32,13 @@ class Comparator implements ComparatorInterface
         return false;
     }
 
-    private function lessThan($value, $value2)
-    {
-        if ($value < $value2) {
-            return true;
-        }
-        return false;
-    }
-
+    /**
+     * Check if $value is higher than $value2
+     *
+     * @param $value
+     * @param $value2
+     * @return bool
+     */
     private function moreThan($value, $value2)
     {
         if ($value > $value2) {
@@ -48,6 +47,13 @@ class Comparator implements ComparatorInterface
         return false;
     }
 
+    /**
+     * Check if $value is equal to $value2
+     *
+     * @param $value
+     * @param $value2
+     * @return bool
+     */
     private function equal($value, $value2)
     {
         if ($value == $value2) {

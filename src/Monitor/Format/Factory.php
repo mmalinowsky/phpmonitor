@@ -8,7 +8,7 @@ class Factory
     {
         $className = 'Monitor\Format\\'.ucwords($type);
         if (! class_exists($className)) {
-            throw new \Exception($type.' format class not found');
+            throw new BadFormatException($type.' format class not found');
         }
         return new $className;
     }

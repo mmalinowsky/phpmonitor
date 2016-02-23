@@ -63,6 +63,7 @@ class TriggerMgrTest extends \PHPUnit_Framework_TestCase
             ->willReturn($type);
         return $trigger;
     }
+
     public function testShouldTriggerServiceBeFired()
     {
         $trigger = $this->prepareTrigger('>', 10, 'Cpu Load');

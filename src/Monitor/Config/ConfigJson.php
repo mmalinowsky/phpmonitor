@@ -4,8 +4,18 @@ namespace Monitor\Config;
 class ConfigJson implements ConfigInterface
 {
 
+    /**
+     * Config data
+     * @var array
+     */
     private $data;
 
+    /**
+     * Load default config values before retrieve from file
+     *
+     * @param $filename
+     * @param array $configValues
+     */
     public function __construct($filename = null, array $configValues = [])
     {
         $this->data = $configValues;
@@ -15,6 +25,11 @@ class ConfigJson implements ConfigInterface
         }
     }
 
+    /**
+     * Load config from file
+     *
+     * @param string filename
+     */
     private function loadFromFile($filename)
     {
         $fullPath = $this->getFullPath($filename);
@@ -23,15 +38,26 @@ class ConfigJson implements ConfigInterface
         $this->data = $this->decode($configData);
     }
 
+    /**
+     * Get config value by key
+     *
+     * @param mixed $name
+     * @param mixed $default
+     */
     public function get($name, $default = null)
     {
         if (isset($this->data[$name])
           || $default) {
             return isset($this->data[$name]) ? $this->data[$name] : $default;
         }
-        throw new \Exception($name.' not found in Config');
+        throw new \Exception($name.' not found in config');
     }
 
+    /**
+     * Get full path of config
+     *
+     * @param string $filename
+     */
     private function getFullPath($filename)
     {
         $fullPath = __DIR__.'/../'.$filename;
@@ -54,13 +80,15 @@ class ConfigJson implements ConfigInterface
     }
 
     /**
+     * Check if config file is readable
      *
      * @param fullPath
+     * @throws \Exception
      */
     private function isFileReadable($fullPath)
     {
         if (! is_readable($fullPath)) {
-            throw new \Exception('config is not readable');
+            throw new \Exception('Config is not readable');
         }
     }
 }

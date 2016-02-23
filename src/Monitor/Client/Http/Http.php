@@ -5,14 +5,22 @@ use \Monitor\Client\ClientInterface;
 
 class Http implements ClientInterface
 {
-    
+
+    /**
+     * Curl handler
+     * @var object
+     */
     private $curlHandler;
+    /**
+     * Curl timeout
+     * @var integer
+     */
     private $timeout;
 
     public function __construct()
     {
         if (! is_callable('curl_init')) {
-            throw new Exception('Curl function is not callable');
+            throw new \Exception('Curl function is not callable');
         }
 
         $this->curlHandler = curl_init();

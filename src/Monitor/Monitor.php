@@ -8,16 +8,49 @@ use Monitor\Format\FormatInterface;
 use Monitor\Config\ConfigInterface;
 use Monitor\Service\ServerHistory as ServerHistoryService;
 use Doctrine\ORM\EntityRepository;
+
 class Monitor
 {
-    
+
+    /**
+     * Config
+     * @var \Monitor\Config\ConfigInterface
+     */
     private $config;
+    /**
+     * Servers config consist \Monitor\Model\Server
+     * @var array
+     */
     private $serversConfig = [];
+    /**
+     * ServersHistory table structure
+     * @var array
+     */
     private $serverHistoryStruct = [];
+    /**
+     * Notification Facade
+     * @var \Monitor\Notification\Facade
+     */
     private $notificationFacade;
+    /**
+     * Monitor client
+     * @var \Monitor\Client\ClientInterface
+     */
     private $client;
+    /**
+     * Format
+     * @var \Monitor\Format\FormatInterface
+     */
     private $format;
+    /**
+     * Server history service
+     * @var \Monitor\Service\ServerHistory
+     */
     private $serverHistoryService;
+    /**
+     * Server repository
+     * @var \Doctrine\ORM\EntityRepository
+     */
     private $serverRepository;
 
     public function __construct(
@@ -36,11 +69,19 @@ class Monitor
         $this->serverHistoryService = $serverHistoryService;
     }
     
+    /**
+     * Set client
+     *
+     * @param \Monitor\Client\ClientInterface $client
+     */
     public function setClient(ClientInterface $client)
     {
         $this->client = $client;
     }
 
+    /**
+     * Run Monitor
+     */
     public function run()
     {
         $this->isClientValid();
@@ -48,6 +89,11 @@ class Monitor
         $this->deleteOldHistoryRecords();
     }
 
+    /**
+     * Check server
+     *
+     * @param \Monitor\Model\Server $serverConfig
+     */
     private function checkServer($serverConfig)
     {
         $this->client->setQuery(
@@ -60,7 +106,7 @@ class Monitor
 
         $serverData = $this->getServerData();
         $serverData['server_id'] = $serverConfig->getId();
-        $serverData['hostname'] = $serverConfig->getName();
+        $serverData['hostname']  = $serverConfig->getName();
 
         if ($serverData['status'] !== 'online') {
             $serverData['status'] = 'offline';
@@ -72,6 +118,11 @@ class Monitor
         );
     }
 
+    /**
+     * Check if client is valid
+     *
+     * @throws \Exception
+     */
     private function isClientValid()
     {
         if (! $this->client) {
@@ -79,19 +130,32 @@ class Monitor
         }
     }
 
+    /**
+     * Delete old server history from DB
+     */
     private function deleteOldHistoryRecords()
     {
-        $expireTimeInMs = $this->config->get('history_expire_time_in_days') * $this->config->get('ms_in_day');
+        $expireTimeInDays = $this->config->get('history_expire_time_in_days');
+        $msInDay = $this->config->get('ms_in_day');
+        $expireTimeInMs = $expireTimeInDays * $msInDay;
         $expireTime = time() - $expireTimeInMs;
         $this->serverHistoryService->deleteRecordsByTime($expireTime);
     }
 
+    /**
+     * Get servers config
+     */
     private function getServersConfig()
     {
         $serverConfigs = $this->serverRepository->findAll();
         return $serverConfigs;
     }
 
+    /**
+     * Get 'servershistory' table structure
+     *
+     * @return array $properties
+     */
     private function getServerHistoryStructure()
     {
         $reflection = new \ReflectionClass(new Model\ServerHistory);
@@ -102,6 +166,7 @@ class Monitor
         unset($properties['id']);
         return $properties;
     }
+
     /**
      * Fill array with concret value when can't find same key in $arrayTofill as in $struct array
      *
@@ -137,7 +202,12 @@ class Monitor
         return $serverData;
     }
 
-    private function addServerHistory($server)
+    /**
+     * Store server history
+     *
+     * @param array $server
+     */
+    private function addServerHistory(array $server)
     {
         $serverHistory = new ServerHistory;
         $serverHistory->setServerId($server['server_id']);

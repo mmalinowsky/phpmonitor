@@ -5,5 +5,12 @@ use Monitor\Model\Notification;
 
 interface ServiceInterface
 {
-    public function sendNotification(Notification $notification, $data);
+
+    /**
+     * Send notification
+     *
+     * @param \Monitor\Model\Notification $notification
+     * @param array $data
+     */
+    public function sendNotification(Notification $notification, array $data);
 }

@@ -9,23 +9,45 @@ use Monitor\Utils\PercentageHelper;
 use Monitor\Model\Trigger;
 use Monitor\Model\NotificationLog;
 use Monitor\Service\NotificationLog as NotificationLogService;
+use Doctrine\ORM\EntityRepository;
 
 class TriggerMgr extends Observable
 {
     
+    /**
+     * @var \Monitor\Model\Trigger
+     */
     private $triggers;
+    /**
+     * @var \Monitor\Notification\Trigger\Comparator\Comparator
+     */
     private $comparator;
+    /**
+     * @var array
+     */
     private $notificationData;
+    /**
+     * @var \Monitor\Notification\NotificationMgr
+     */
     private $notificationMgr;
+    /**
+     * @var \Monitor\Utils\PercentageHelper
+     */
     private $percentageHelper;
+    /**
+     * @var \Doctrine\ORM\EntityRepository
+     */
     private $serviceRepository;
+    /**
+     * @var \Monitor\Service\NotificationLog
+     */
     private $notificationLogService;
 
     public function __construct(
         NotificationMgr $notifcationMgr,
         PercentageHelper $percentageHelper,
-        $triggerRepository,
-        $serviceRepository,
+        EntityRepository $triggerRepository,
+        EntityRepository $serviceRepository,
         NotificationLogService $notificationLogService,
         Comparator $comparator
     ) {
@@ -37,7 +59,12 @@ class TriggerMgr extends Observable
         $this->comparator = $comparator;
     }
 
-    public function setNotificationData($data)
+    /**
+     * Add notification data, we will use them in notification services
+     *
+     * @param array $data
+     */
+    public function setNotificationData(array $data)
     {
         $this->notificationData = $data;
     }

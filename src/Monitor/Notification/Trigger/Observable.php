@@ -6,6 +6,7 @@ use Monitor\Model\Notification;
 
 abstract class Observable
 {
+
     protected $observers;
 
     public function addObserver(ServiceInterface $observer)
