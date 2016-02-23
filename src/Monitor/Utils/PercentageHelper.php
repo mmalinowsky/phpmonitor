@@ -1,19 +1,23 @@
 <?php
 namespace Monitor\Utils;
 
+use Monitor\Model\Service;
+
 class PercentageHelper
 {
+
     /**
      * Calculate service percentage
      *
      * @access public
      * @param  array $serverData server history
-     * @return double
+     * @param  Monitor\Model\Service $service
+     * @return double|integer
      */
-    public function getServicePercentage(array $serverData, $service)
+    public function getServicePercentage(array $serverData, Service $service)
     {
         list($column1, $column2) = array_pad(explode(":", $service->getDBColumns()), 2, 1);
-        if (! isset($serverData[$column1])
+        if ( ! isset($serverData[$column1])
             || ! isset($serverData[$column2])) {
             return 0;
         }
@@ -30,7 +34,7 @@ class PercentageHelper
      * @access private
      * @param  $value1
      * @param  $value2
-     * @return double
+     * @return double|integer
      */
     private function getPercentage($value1, $value2)
     {

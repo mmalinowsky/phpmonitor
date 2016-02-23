@@ -58,8 +58,7 @@ class Http implements ClientInterface
     /**
      * Retrieve resources by http protocol
      *
-     * @access public
-     * @return mixed
+     * @return mixed $resources
      */
     public function getResources()
     {

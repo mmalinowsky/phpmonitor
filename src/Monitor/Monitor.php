@@ -125,7 +125,7 @@ class Monitor
      */
     private function isClientValid()
     {
-        if (! $this->client) {
+        if ( ! $this->client) {
             throw new \Exception('Client is not valid');
         }
     }
@@ -192,7 +192,7 @@ class Monitor
     {
         $resources = $this->client->getResources();
 
-        if (! $resources) {
+        if ( ! $resources) {
             $resources = json_encode(
                 ['status' => 'offline']
             );

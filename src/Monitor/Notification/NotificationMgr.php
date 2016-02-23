@@ -95,7 +95,7 @@ class NotificationMgr
             $triggerId,
             $serverId
         );
-        if (! $queryResult) {
+        if ( ! $queryResult) {
             return true;
         }
         $timeOfLastFiredUpTrigger = $queryResult[0]['created'];

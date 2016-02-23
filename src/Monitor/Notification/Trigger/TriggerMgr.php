@@ -127,7 +127,7 @@ class TriggerMgr extends Observable
      */
     private function checkIsComparatorValid()
     {
-        if (! $this->comparator) {
+        if ( ! $this->comparator) {
             throw new \Exception('Comparator invalid');
         }
     }
@@ -142,7 +142,7 @@ class TriggerMgr extends Observable
      */
     private function fireTrigger(Trigger $trigger, array $serverData, $msDelay)
     {
-        if (! $this->notificationMgr->hasNotificationDelayExpired(
+        if ( ! $this->notificationMgr->hasNotificationDelayExpired(
             $trigger->getId(),
             $serverData['server_id'],
             $msDelay
