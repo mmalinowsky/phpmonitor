@@ -2,6 +2,7 @@
 namespace Monitor;
 
 use Monitor\Notification\Facade;
+use Monitor\Model\Server;
 use Monitor\Model\ServerHistory;
 use Monitor\Client\ClientInterface;
 use Monitor\Format\FormatInterface;
@@ -94,7 +95,7 @@ class Monitor
      *
      * @param \Monitor\Model\Server $serverConfig
      */
-    private function checkServer($serverConfig)
+    private function checkServer(Server $serverConfig)
     {
         $this->client->setQuery(
             $serverConfig->getUrlPath(),
