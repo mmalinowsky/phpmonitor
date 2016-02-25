@@ -1,5 +1,5 @@
 <?php
-namespace Monitor\Format;
+namespace Monitor\Contract\Format;
 
 interface FormatInterface
 {

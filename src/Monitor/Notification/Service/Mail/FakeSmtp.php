@@ -2,7 +2,7 @@
 namespace Monitor\Notification\Service\Mail;
 
 use Monitor\Model\Notification;
-use \Monitor\Notification\Service\ServiceInterface as ServiceInterface;
+use Monitor\Contract\Notification\Service\ServiceInterface;
 
 class FakeSmtp implements ServiceInterface
 {

@@ -2,7 +2,7 @@
 namespace Monitor\Notification;
 
 use Monitor\Notification\Trigger\TriggerMgr;
-use Monitor\Config\ConfigInterface;
+use Monitor\Contract\Config\ConfigInterface;
 use Monitor\Notification\Service\Factory as ServiceFactory;
 
 class Facade

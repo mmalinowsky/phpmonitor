@@ -1,6 +1,8 @@
 <?php
 namespace Monitor\Config;
 
+use Monitor\Contract\Config\ConfigInterface;
+
 class ConfigJson implements ConfigInterface
 {
 

@@ -1,6 +1,8 @@
 <?php
 namespace Monitor\Format;
 
+use Monitor\Contract\Format\FormatInterface;
+
 class Json implements FormatInterface
 {
 

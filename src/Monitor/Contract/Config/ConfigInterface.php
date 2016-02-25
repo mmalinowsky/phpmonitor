@@ -1,5 +1,5 @@
 <?php
-namespace Monitor\Config;
+namespace Monitor\Contract\Config;
 
 interface ConfigInterface
 {

@@ -1,5 +1,5 @@
 <?php
-namespace Monitor\Client;
+namespace Monitor\Contract\Client;
 
 interface ClientInterface
 {

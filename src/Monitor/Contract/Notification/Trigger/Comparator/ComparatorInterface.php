@@ -1,5 +1,5 @@
 <?php
-namespace Monitor\Notification\Trigger\Comparator;
+namespace Monitor\Contract\Notification\Trigger\Comparator;
 
 use Monitor\Model\Trigger;
 

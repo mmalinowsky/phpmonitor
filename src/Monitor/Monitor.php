@@ -4,9 +4,9 @@ namespace Monitor;
 use Monitor\Notification\Facade;
 use Monitor\Model\Server;
 use Monitor\Model\ServerHistory;
-use Monitor\Client\ClientInterface;
-use Monitor\Format\FormatInterface;
-use Monitor\Config\ConfigInterface;
+use Monitor\Contract\Client\ClientInterface;
+use Monitor\Contract\Format\FormatInterface;
+use Monitor\Contract\Config\ConfigInterface;
 use Monitor\Service\ServerHistory as ServerHistoryService;
 use Doctrine\ORM\EntityRepository;
 
@@ -15,7 +15,7 @@ class Monitor
 
     /**
      * Config
-     * @var \Monitor\Config\ConfigInterface
+     * @var \Monitor\Contract\Config\ConfigInterface
      */
     private $config;
     /**
@@ -35,12 +35,12 @@ class Monitor
     private $notificationFacade;
     /**
      * Monitor client
-     * @var \Monitor\Client\ClientInterface
+     * @var \Monitor\Contract\Client\ClientInterface
      */
     private $client;
     /**
      * Format
-     * @var \Monitor\Format\FormatInterface
+     * @var \Monitor\Contract\Format\FormatInterface
      */
     private $format;
     /**

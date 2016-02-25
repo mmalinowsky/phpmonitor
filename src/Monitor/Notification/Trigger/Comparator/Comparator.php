@@ -2,6 +2,7 @@
 namespace Monitor\Notification\Trigger\Comparator;
 
 use Monitor\Model\Trigger;
+use Monitor\Contract\Notification\Trigger\Comparator\ComparatorInterface;
 
 class Comparator implements ComparatorInterface
 {

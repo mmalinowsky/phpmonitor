@@ -9,7 +9,7 @@ use Doctrine\ORM\EntityRepository;
 class Context
 {
     /**
-     * @var \Monitor\Notification\Trigger\Comparator\Strategy\StrategyInterface
+     * @var \Monitor\Contract\Notification\Trigger\Comparator\Strategy\Strategy
      */
     private $strategy;
 
@@ -32,7 +32,7 @@ class Context
      * @param array $serverData
      * @param \Doctrine\ORM\EntityRepository $serviceRepository
      * @param \Monitor\Utils\PercentageHelper $percentageHelper
-     * @param \Monitor\Notification\Trigger\Comparator\ComparatorInterface $comparator
+     * @param \Monitor\Contract\Notification\Trigger\Comparator\ComparatorInterface $comparator
      */
     public function compare(
         Trigger $trigger,

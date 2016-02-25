@@ -1,8 +1,8 @@
 <?php
-namespace Monitor\Notification\Trigger\Comparator\Strategy;
+namespace Monitor\Contract\Notification\Trigger\Comparator\Strategy;
 
 use Monitor\Model\Trigger;
-use Monitor\Notification\Trigger\Comparator\ComparatorInterface;
+use Monitor\Contract\Notification\Trigger\Comparator\ComparatorInterface;
 use Monitor\Utils\PercentageHelper;
 use Doctrine\ORM\EntityRepository;
 

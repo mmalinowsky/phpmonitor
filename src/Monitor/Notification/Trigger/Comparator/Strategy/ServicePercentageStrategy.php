@@ -2,9 +2,10 @@
 namespace Monitor\Notification\Trigger\Comparator\Strategy;
 
 use Monitor\Model\Trigger;
-use Monitor\Notification\Trigger\Comparator\ComparatorInterface;
+use Monitor\Contract\Notification\Trigger\Comparator\ComparatorInterface;
 use Monitor\Utils\PercentageHelper;
 use Doctrine\ORM\EntityRepository;
+use Monitor\Contract\Notification\Trigger\Comparator\Strategy\StrategyInterface;
 
 class ServicePercentageStrategy implements StrategyInterface
 {
@@ -16,7 +17,7 @@ class ServicePercentageStrategy implements StrategyInterface
      * @param array $serverData
      * @param \Doctrine\ORM\EntityRepository $serviceRepository
      * @param \Monitor\Utils\PercentageHelper $percentageHelper
-     * @param \Monitor\Notification\Trigger\Comparator\ComparatorInterface $comparator
+     * @param \Monitor\Contract\Notification\Trigger\Comparator\ComparatorInterface $comparator
      */
     public function compare(
         Trigger $trigger,

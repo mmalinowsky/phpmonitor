@@ -1,5 +1,5 @@
 <?php
-namespace Monitor\Notification\Service;
+namespace Monitor\Contract\Notification\Service;
 
 use Monitor\Model\Notification;
 

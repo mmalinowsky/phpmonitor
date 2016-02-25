@@ -1,7 +1,7 @@
 <?php
 namespace Monitor\Client\Http;
 
-use \Monitor\Client\ClientInterface;
+use \Monitor\Contract\Client\ClientInterface;
 
 class Http implements ClientInterface
 {

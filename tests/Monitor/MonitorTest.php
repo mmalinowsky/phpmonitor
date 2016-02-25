@@ -13,7 +13,7 @@ class MonitorTest extends \PHPUnit_Framework_TestCase
                                          ->setMockClassName('Facade')
                                          ->disableOriginalConstructor()
                                          ->getMock();
-        $format = $this->getMockBuilder('\Monitor\Format\FormatInterface')
+        $format = $this->getMockBuilder('\Monitor\Contract\Format\FormatInterface')
                                         ->setMockClassName('FormatInterface')
                                         ->disableOriginalConstructor()
                                         ->getMock();
