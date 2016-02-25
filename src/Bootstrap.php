@@ -1,9 +1,10 @@
 <?php
+
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
 use Monitor\Config\ConfigJson as Config;
 
-require __DIR__.'/../../vendor/autoload.php';
+require __DIR__.'/../vendor/autoload.php';
 
 $paths = ["Model"];
 $isDevMode = false;

@@ -1,5 +1,4 @@
 <?php
-namespace Monitor;
 
 use Monitor\Notification\Trigger\Comparator\Comparator;
 use Monitor\Notification\Service\Factory as ServiceFactory;
@@ -12,8 +11,9 @@ use Monitor\Service\ServerHistory as ServerHistoryService;
 use Monitor\Format\Factory as FormatFactory;
 use Monitor\Utils\PercentageHelper;
 use Monitor\Client\Http\Http as Http;
+use Monitor\Monitor as Monitor;
 
-require __DIR__.'/bootstrap.php';
+require __DIR__.'/Bootstrap.php';
 
 $formatFactory = new FormatFactory;
 $format = $formatFactory->build($config->get('format'));
