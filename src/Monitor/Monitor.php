@@ -176,22 +176,6 @@ class Monitor
     }
 
     /**
-     * Fill array with concret value when can't find same key in $arrayTofill as in $struct array
-     *
-     * @param  array $struct
-     * @param  array $arrayToFill
-     * @param  int   $value
-     * @return array $arrayMerged
-     */
-    private function fillArrayWithDefaultValue(array $struct, array $arrayToFill, $value = 0)
-    {
-        $arrayDiff = array_diff($struct, $arrayToFill);
-        $arrayDiffFilled = array_fill_keys($arrayDiff, $value);
-        $arrayMerged = array_merge($arrayDiffFilled, $arrayToFill);
-        return $arrayMerged;
-    }
-
-    /**
      * Get server data
      *
      * @return array $serverData
