@@ -14,12 +14,12 @@
 
     "format" : "json",
 
-    "hostname" : "localhost",
-    "username" : "",
-    "password" : "",
-    "database" : "",
-    "dbdriver" : "mysql",
+    "db_hostname" : "localhost",
+    "db_username" : "",
+    "db_password" : "",
+    "db_name" :     "",
+    "db_driver" :   "pdo_mysql",
 
     "ms_in_hour": 3600,
-    "ms_in_day": 86400
+    "ms_in_day":  86400
 }

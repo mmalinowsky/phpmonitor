@@ -13,10 +13,10 @@ $config = new Config('Config.json');
 
 $dbParams =
 [
-    'driver'    => 'pdo_mysql',
-    'user'      => $config->get('username'),
-    'password'  => $config->get('password'),
-    'dbname'    => $config->get('database'),
+    'driver'    => $config->get('db_driver'),
+    'user'      => $config->get('db_username'),
+    'password'  => $config->get('db_password'),
+    'dbname'    => $config->get('db_name'),
 ];
 
 $DoctrineConfig = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode);
