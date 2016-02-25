@@ -12,6 +12,7 @@ use Monitor\Format\Factory as FormatFactory;
 use Monitor\Utils\PercentageHelper;
 use Monitor\Client\Http\Http as Http;
 use Monitor\Monitor as Monitor;
+use Monitor\Utils\ArrayHelper;
 
 require __DIR__.'/Bootstrap.php';
 
@@ -35,18 +36,20 @@ $triggerMgr = new TriggerMgr(
 );
 $triggerMgr->setNotificationData($config->get('notification')['data']);
 
-$monitor = new Monitor(
-    $config,
-    new NotificationFacade(
+$notificationFacade = new NotificationFacade(
         $config,
         $triggerMgr,
         new ServiceFactory,
         $entityManager->getRepository('Monitor\Model\Service')
-    ),
-    $format,
-    $entityManager->getRepository('Monitor\Model\Server'),
-    new ServerHistoryService($entityManager)
 );
 
+$monitor = new Monitor(
+    $config,
+    $notificationFacade,
+    $format,
+    $entityManager->getRepository('Monitor\Model\Server'),
+    new ServerHistoryService($entityManager),
+    new ArrayHelper
+);
 $monitor->setClient(new Http);
 $monitor->run();

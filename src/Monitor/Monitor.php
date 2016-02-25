@@ -8,6 +8,7 @@ use Monitor\Contract\Client\ClientInterface;
 use Monitor\Contract\Format\FormatInterface;
 use Monitor\Contract\Config\ConfigInterface;
 use Monitor\Service\ServerHistory as ServerHistoryService;
+use Monitor\Utils\ArrayHelper;
 use Doctrine\ORM\EntityRepository;
 
 class Monitor
@@ -53,13 +54,18 @@ class Monitor
      * @var \Doctrine\ORM\EntityRepository
      */
     private $serverRepository;
+    /**
+     * @var \Monitor\Utils\ArrayHelper
+     */
+    private $arrayHelper;
 
     public function __construct(
         ConfigInterface $config,
         Facade $notificationFacade,
         FormatInterface $format,
         EntityRepository $serverRepository,
-        ServerHistoryService $serverHistoryService
+        ServerHistoryService $serverHistoryService,
+        ArrayHelper $arrayHelper
     ) {
         $this->config = $config;
         $this->format = $format;
@@ -68,6 +74,7 @@ class Monitor
         $this->serverHistoryStruct = $this->getServerHistoryStructure();
         $this->notificationFacade = $notificationFacade;
         $this->serverHistoryService = $serverHistoryService;
+        $this->arrayHelper = $arrayHelper;
     }
     
     /**
@@ -199,7 +206,10 @@ class Monitor
             );
         }
         $decodedData = $this->format->convertToArray($resources);
-        $serverData = $this->fillArrayWithDefaultValue($this->serverHistoryStruct, $decodedData);
+        $serverData = $this->arrayHelper->fillWithDefaultValue(
+            $this->serverHistoryStruct,
+            $decodedData
+        );
         return $serverData;
     }
 
