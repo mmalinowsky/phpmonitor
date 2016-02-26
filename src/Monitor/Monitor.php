@@ -71,16 +71,16 @@ class Monitor
         $this->format = $format;
         $this->serverRepository = $serverRepository;
         $this->serversConfig = $this->getServersConfig();
-        $this->serverHistoryStruct = $this->getServerHistoryStructure();
         $this->notificationFacade = $notificationFacade;
         $this->serverHistoryService = $serverHistoryService;
+        $this->serverHistoryStruct = $this->serverHistoryService->getTableStructure();
         $this->arrayHelper = $arrayHelper;
     }
     
     /**
      * Set client
      *
-     * @param \Monitor\Client\ClientInterface $client
+     * @param \Monitor\Contract\Client\ClientInterface $client
      */
     public function setClient(ClientInterface $client)
     {
@@ -119,7 +119,7 @@ class Monitor
         if ($serverData['status'] !== 'online') {
             $serverData['status'] = 'offline';
         }
-        $this->addServerHistory($serverData);
+        $this->serverHistoryService->addServerHistory($serverData);
         $this->notificationFacade->checkTriggers(
             $serverData,
             $this->config->get('ms_in_hour')
@@ -160,22 +160,6 @@ class Monitor
     }
 
     /**
-     * Get 'servershistory' table structure
-     *
-     * @return array $properties
-     */
-    private function getServerHistoryStructure()
-    {
-        $reflection = new \ReflectionClass(new Model\ServerHistory);
-        $properties = [];
-        foreach ($reflection->getProperties() as $property) {
-            $properties[] = $property->name;
-        }
-        unset($properties['id']);
-        return $properties;
-    }
-
-    /**
      * Get server data
      *
      * @return array $serverData
@@ -195,37 +179,5 @@ class Monitor
             $decodedData
         );
         return $serverData;
-    }
-
-    /**
-     * Store server history
-     *
-     * @param array $server
-     */
-    private function addServerHistory(array $server)
-    {
-        $serverHistory = new ServerHistory;
-        $serverHistory->setServerId($server['server_id']);
-        $serverHistory->setHostname($server['hostname']);
-        $serverHistory->setStatus($server['status']);
-        $serverHistory->setSysLoad($server['sys_load']);
-        $serverHistory->setCpuCores($server['cpu_cores']);
-        $serverHistory->setMemoryUsage($server['memory_usage']);
-        $serverHistory->setMemoryTotal($server['memory_total']);
-        $serverHistory->setMemoryFree($server['memory_free']);
-        $serverHistory->setDiskFree($server['disk_free']);
-        $serverHistory->setDiskTotal($server['disk_total']);
-        $serverHistory->setDiskUsage($server['disk_usage']);
-        $serverHistory->setPing($server['ping']);
-        $serverHistory->setMysqlSlowQuery($server['mysql_slow_query']);
-        $serverHistory->setMysqlQueryAvg($server['mysql_query_avg']);
-        $serverHistory->setMemcacheHits($server['memcache_hits']);
-        $serverHistory->setMemcacheMiss($server['memcache_miss']);
-        $serverHistory->setMemcacheGet($server['memcache_get']);
-        $serverHistory->setMemcacheCmd($server['memcache_cmd']);
-        $serverHistory->setMemcacheBytes($server['memcache_bytes']);
-        $serverHistory->setMemcacheMaxBytes($server['memcache_max_bytes']);
-        $serverHistory->setTime(time());
-        $this->serverHistoryService->save($serverHistory);
     }
 }
