@@ -50,11 +50,6 @@ class Monitor
      */
     private $serverHistoryService;
     /**
-     * Server repository
-     * @var \Doctrine\ORM\EntityRepository
-     */
-    private $serverRepository;
-    /**
      * @var \Monitor\Utils\ArrayHelper
      */
     private $arrayHelper;
@@ -63,14 +58,13 @@ class Monitor
         ConfigInterface $config,
         Facade $notificationFacade,
         FormatInterface $format,
-        EntityRepository $serverRepository,
+        array $serversConfig,
         ServerHistoryService $serverHistoryService,
         ArrayHelper $arrayHelper
     ) {
         $this->config = $config;
         $this->format = $format;
-        $this->serverRepository = $serverRepository;
-        $this->serversConfig = $this->getServersConfig();
+        $this->serversConfig = $serversConfig;
         $this->notificationFacade = $notificationFacade;
         $this->serverHistoryService = $serverHistoryService;
         $this->serverHistoryStruct = $this->serverHistoryService->getTableStructure();
@@ -148,15 +142,6 @@ class Monitor
         $expireTimeInMs = $expireTimeInDays * $msInDay;
         $expireTime = time() - $expireTimeInMs;
         $this->serverHistoryService->deleteRecordsByTime($expireTime);
-    }
-
-    /**
-     * Get servers config
-     */
-    private function getServersConfig()
-    {
-        $serverConfigs = $this->serverRepository->findAll();
-        return $serverConfigs;
     }
 
     /**

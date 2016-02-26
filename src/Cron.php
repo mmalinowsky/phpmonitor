@@ -47,7 +47,7 @@ $monitor = new Monitor(
     $config,
     $notificationFacade,
     $format,
-    $entityManager->getRepository('Monitor\Model\Server'),
+    $entityManager->getRepository('Monitor\Model\Server')->findAll(),
     new ServerHistoryService($entityManager),
     new ArrayHelper
 );
