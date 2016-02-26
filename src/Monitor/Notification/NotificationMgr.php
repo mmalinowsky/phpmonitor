@@ -16,7 +16,7 @@ class NotificationMgr
     /**
      * @var integer
      */
-    private $notificationDelay;
+    private $notificationDelayInHours;
     /**
      * @var \Monitor\Service\NotificationLog
      */
@@ -35,7 +35,7 @@ class NotificationMgr
     ) {
     
         $this->notificationParser = $notificationParser;
-        $this->notificationDelay = $notificationDelay;
+        $this->notificationDelayInHours = $notificationDelay;
         $this->notificationLogService = $notificationLogService;
         $this->repository = $repository;
     }
@@ -100,6 +100,6 @@ class NotificationMgr
         }
         $timeOfLastFiredUpTrigger = $queryResult[0]['created'];
         $timeDiff = $timeOfLastFiredUpTrigger - time();
-        return ($this->notificationDelay * $msDelay + $timeDiff >= 0) ? false : true;
+        return ($this->notificationDelayInHours * $msDelay + $timeDiff >= 0) ? false : true;
     }
 }
