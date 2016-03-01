@@ -14,11 +14,11 @@
 
     "format" : "json",
 
-    "hostname" : "{{db.host}}",
-    "username" : "{{db.username}}",
-    "password" : "{{db.password}}",
-    "database" : "{{db.name}}",
-    "dbdriver" : "mysql",
+    "db_hostname" : "{{db.host}}",
+    "db_username" : "{{db.username}}",
+    "db_password" : "{{db.password}}",
+    "db_name"     : "{{db.name}}",
+    "db_driver"   : "pdo_mysql",
 
     "ms_in_hour": 3600,
     "ms_in_day": 86400

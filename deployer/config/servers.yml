@@ -6,7 +6,7 @@ server_1:
         private_key: "~/id_rsa"
         password: ""
     stage:         production
-    deploy_path:   "/var/www/"
+    deploy_path:   ""
     branch:        master
     db:
         host: ""

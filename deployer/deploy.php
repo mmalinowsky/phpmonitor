@@ -2,7 +2,6 @@
 require 'recipe/common.php';
 require '../vendor/deployphp/recipes/recipes/configure.php';
 
-
 set('keep_releases', 5);
 
 set('shared_files',
@@ -11,8 +10,7 @@ set('shared_files',
     ]
 );
 
-
-set('repository', 'https://github.com/phaniso/Multi-Server-Monitor.git');
+set('repository', 'https://github.com/phaniso/phpmonitor.git');
 
 task('deploy', [
     'deploy:prepare',
