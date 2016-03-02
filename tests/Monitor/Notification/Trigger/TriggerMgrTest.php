@@ -18,10 +18,10 @@ class TriggerMgrTest extends \PHPUnit_Framework_TestCase
         $service->method('getPercentages')
             ->willReturn(1);
 
-        $notificationMgr = $this->getMockBuilder('Monitor\Notification\NotificationMgr')
+        $notifier = $this->getMockBuilder('Monitor\Notification\Notifier')
             ->disableOriginalConstructor()
             ->getMock();
-        $notificationMgr->method('hasNotificationDelayExpired')
+        $notifier->method('hasNotificationDelayExpired')
             ->willreturn('true');
         $triggerRepository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
             ->disableOriginalConstructor()
@@ -39,7 +39,7 @@ class TriggerMgrTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $this->triggers = new TriggerMgr(
-            $notificationMgr,
+            $notifier,
             new PercentageHelper,
             $triggerRepository,
             $this->serviceRepository,

@@ -2,7 +2,7 @@
 namespace Monitor\Notification\Trigger;
 
 use Monitor\Model\Notification;
-use Monitor\Notification\NotificationMgr;
+use Monitor\Notification\Notifier;
 use Monitor\Notification\Trigger\Comparator\Comparator;
 use Monitor\Notification\Trigger\Comparator\Strategy\Context as StrategyContext;
 use Monitor\Utils\PercentageHelper;
@@ -11,7 +11,7 @@ use Monitor\Model\NotificationLog;
 use Monitor\Service\NotificationLog as NotificationLogService;
 use Doctrine\ORM\EntityRepository;
 
-class TriggerMgr extends Observable
+class TriggerMgr
 {
     
     /**
@@ -23,13 +23,9 @@ class TriggerMgr extends Observable
      */
     private $comparator;
     /**
-     * @var array
-     */
-    private $notificationData;
-    /**
      * @var \Monitor\Notification\NotificationMgr
      */
-    private $notificationMgr;
+    private $notifier;
     /**
      * @var \Monitor\Utils\PercentageHelper
      */
@@ -44,43 +40,19 @@ class TriggerMgr extends Observable
     private $notificationLogService;
 
     public function __construct(
-        NotificationMgr $notifcationMgr,
+        Notifier $notifier,
         PercentageHelper $percentageHelper,
         EntityRepository $triggerRepository,
         EntityRepository $serviceRepository,
         NotificationLogService $notificationLogService,
         Comparator $comparator
     ) {
-        $this->notificationMgr = $notifcationMgr;
+        $this->notifier = $notifier;
         $this->percentageHelper = $percentageHelper;
         $this->triggers = $triggerRepository->findAll();
         $this->serviceRepository = $serviceRepository;
         $this->notificationLogService = $notificationLogService;
         $this->comparator = $comparator;
-    }
-
-    /**
-     * Add notification data, we will use them in notification services
-     *
-     * @param array $data
-     */
-    public function setNotificationData(array $data)
-    {
-        $this->notificationData = $data;
-    }
-
-    /**
-     * Send notification to notification service
-     *
-     * @access public
-     * @param  Notification $notification
-     * @return
-     */
-    public function notifyServices(Notification $notification)
-    {
-        foreach ($this->observers as $observer) {
-            $observer->sendNotification($notification, $this->notificationData);
-        }
     }
 
     /**
@@ -110,7 +82,7 @@ class TriggerMgr extends Observable
     public function shouldTriggerBeFired(Trigger $trigger, array $serverData, $msDelay)
     {
         $this->checkIsComparatorValid();
-        if ( ! $this->notificationMgr->hasNotificationDelayExpired(
+        if ( ! $this->notifier->hasNotificationDelayExpired(
             $trigger->getId(),
             $serverData['server_id'],
             $msDelay
@@ -150,8 +122,7 @@ class TriggerMgr extends Observable
      */
     private function fireTrigger(Trigger $trigger, array $serverData)
     {
-        $notification = $this->notificationMgr->prepareNotification($trigger, $serverData);
-        $this->notifyServices($notification);
+        $notification = $this->notifier->triggerHasBeenFired($trigger, $serverData);
         $log = new NotificationLog;
         $log->setTriggerId($trigger->getId());
         $log->setServerId($serverData['server_id']);

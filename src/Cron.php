@@ -4,7 +4,7 @@ use Monitor\Notification\Trigger\Comparator\Comparator;
 use Monitor\Notification\Service\Factory as ServiceFactory;
 use Monitor\Notification\Trigger\TriggerMgr;
 use Monitor\Notification\Facade as NotificationFacade;
-use Monitor\Notification\NotificationMgr;
+use Monitor\Notification\Notifier;
 use Monitor\Notification\Parser as NotificationParser;
 use Monitor\Service\NotificationLog as NotificationLogService;
 use Monitor\Service\ServerHistory as ServerHistoryService;
@@ -19,28 +19,28 @@ require __DIR__.'/Bootstrap.php';
 $formatFactory = new FormatFactory;
 $format = $formatFactory->build($config->get('format'));
 
-$notificationMgr = new NotificationMgr(
+$notifier = new Notifier(
     new NotificationParser,
     $config->get('notification_delay_in_hours'),
     new NotificationLogService($entityManager),
     $entityManager->getRepository('Monitor\Model\Notification')
 );
+$notifier->setNotificationData($config->get('notification')['data']);
 
 $triggerMgr = new TriggerMgr(
-    $notificationMgr,
+    $notifier,
     new PercentageHelper,
     $entityManager->getRepository('Monitor\Model\Trigger'),
     $entityManager->getRepository('Monitor\Model\Service'),
     new NotificationLogService($entityManager),
     new Comparator
 );
-$triggerMgr->setNotificationData($config->get('notification')['data']);
 
 $notificationFacade = new NotificationFacade(
         $config,
         $triggerMgr,
         new ServiceFactory,
-        $entityManager->getRepository('Monitor\Model\Service')
+        $notifier
 );
 
 $monitor = new Monitor(

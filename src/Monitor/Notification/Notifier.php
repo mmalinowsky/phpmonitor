@@ -6,7 +6,7 @@ use Monitor\Model\Trigger;
 use Monitor\Service\NotificationLog as NotificationLogService;
 use Doctrine\ORM\EntityRepository;
 
-class NotificationMgr
+class Notifier extends Observable
 {
 
     /**
@@ -26,6 +26,10 @@ class NotificationMgr
      * @var \Doctrine\ORM\EntityRepository
      */
     private $repository;
+    /**
+     * @var array
+     */
+    private $notificationData;
 
     public function __construct(
         Parser $notificationParser,
@@ -41,12 +45,21 @@ class NotificationMgr
     }
 
     /**
+     * Add notification data, we will use them in notification services
+     *
+     * @param array $data
+     */
+    public function setNotificationData(array $data)
+    {
+        $this->notificationData = $data;
+    }
+    /**
      * Get Notification by id
      *
      * @param int $id
      * @return \Monitor\Model\Notification $notification
      */
-    public function getNotificationById($id)
+    private function getNotificationById($id)
     {
         $notification = $this->repository->find($id);
         return $notification;
@@ -58,7 +71,7 @@ class NotificationMgr
      * @param \Monitor\Model\Notification $notification
      * @param array $data
      */
-    public function parseNotification(Notification $notification, $data)
+    private function parseNotification(Notification $notification, $data)
     {
         $this->notificationParser->parse($notification, $data);
     }
@@ -71,7 +84,7 @@ class NotificationMgr
      * @param  array   $serverData
      * @return \Monitor\Notification\Notification
      */
-    public function prepareNotification(Trigger $trigger, array $serverData)
+    private function prepareNotification(Trigger $trigger, array $serverData)
     {
         $notificationId = $trigger->getNotificationId();
         $notification = $this->getNotificationById($notificationId);
@@ -101,5 +114,32 @@ class NotificationMgr
         $timeOfLastFiredUpTrigger = $queryResult[0]['created'];
         $timeDiff = $timeOfLastFiredUpTrigger - time();
         return ($this->notificationDelayInHours * $msDelay + $timeDiff >= 0) ? false : true;
+    }
+    /**
+     *
+     *
+     * @param  Trigger $trigger
+     * @param  array   $serverData
+     * @return \Monitor\Notification\Notification
+     */
+    public function triggerHasBeenFired(Trigger $trigger, array $serverData)
+    {
+        $notification = $this->prepareNotification($trigger, $serverData);
+        $this->notifyServices($notification);
+        return $notification;
+    }
+
+    /**
+     * Send notification to notification service
+     *
+     * @access public
+     * @param  Notification $notification
+     * @return
+     */
+    public function notifyServices(Notification $notification)
+    {
+        foreach ($this->observers as $observer) {
+            $observer->sendNotification($notification, $this->notificationData);
+        }
     }
 }

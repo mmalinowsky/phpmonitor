@@ -1,5 +1,5 @@
 <?php
-namespace Monitor\Notification\Trigger;
+namespace Monitor\Notification;
 
 use Monitor\Contract\Notification\Service\ServiceInterface;
 use Monitor\Model\Notification;
