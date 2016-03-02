@@ -18,11 +18,14 @@ require __DIR__.'/Bootstrap.php';
 
 $formatFactory = new FormatFactory;
 $format = $formatFactory->build($config->get('format'));
+$notificationLogService = new NotificationLogService(
+    $entityManager,
+    $config->get('notification_delay_in_hours')
+);
 
 $notifier = new Notifier(
     new NotificationParser,
-    $config->get('notification_delay_in_hours'),
-    new NotificationLogService($entityManager),
+    $notificationLogService,
     $entityManager->getRepository('Monitor\Model\Notification')
 );
 $notifier->setNotificationData($config->get('notification')['data']);
@@ -32,7 +35,7 @@ $triggerMgr = new TriggerMgr(
     new PercentageHelper,
     $entityManager->getRepository('Monitor\Model\Trigger'),
     $entityManager->getRepository('Monitor\Model\Service'),
-    new NotificationLogService($entityManager),
+    $notificationLogService,
     new Comparator
 );
 

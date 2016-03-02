@@ -14,10 +14,6 @@ class Notifier extends Observable
      */
     private $notificationParser;
     /**
-     * @var integer
-     */
-    private $notificationDelayInHours;
-    /**
      * @var \Monitor\Service\NotificationLog
      */
     private $notificationLogService;
@@ -33,13 +29,11 @@ class Notifier extends Observable
 
     public function __construct(
         Parser $notificationParser,
-        $notificationDelay,
         NotificationLogService $notificationLogService,
         EntityRepository $repository
     ) {
     
         $this->notificationParser = $notificationParser;
-        $this->notificationDelayInHours = $notificationDelay;
         $this->notificationLogService = $notificationLogService;
         $this->repository = $repository;
     }
@@ -94,27 +88,6 @@ class Notifier extends Observable
         return $notification;
     }
 
-    /**
-     * Check if same type of notification for concret server has been sent already
-     *
-     * @access private
-     * @param  int $triggerId
-     * @param  int $serverId
-     * @return boolean
-     */
-    public function hasNotificationDelayExpired($triggerId, $serverId, $msDelay)
-    {
-        $queryResult = $this->notificationLogService->getLastForTrigger(
-            $triggerId,
-            $serverId
-        );
-        if ( ! $queryResult) {
-            return true;
-        }
-        $timeOfLastFiredUpTrigger = $queryResult[0]['created'];
-        $timeDiff = $timeOfLastFiredUpTrigger - time();
-        return ($this->notificationDelayInHours * $msDelay + $timeDiff >= 0) ? false : true;
-    }
     /**
      *
      *

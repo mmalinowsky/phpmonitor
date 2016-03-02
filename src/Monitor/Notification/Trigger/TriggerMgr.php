@@ -82,7 +82,7 @@ class TriggerMgr
     public function shouldTriggerBeFired(Trigger $trigger, array $serverData, $msDelay)
     {
         $this->checkIsComparatorValid();
-        if ( ! $this->notifier->hasNotificationDelayExpired(
+        if ( ! $this->notificationLogService->hasNotificationDelayExpired(
             $trigger->getId(),
             $serverData['server_id'],
             $msDelay
