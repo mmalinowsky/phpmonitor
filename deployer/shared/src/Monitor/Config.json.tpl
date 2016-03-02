@@ -11,6 +11,7 @@
 
     "notification_delay_in_hours" : 1,
     "history_expire_time_in_days" : 7,
+    "api_request_name" : "serverinfo",
 
     "format" : "json",
 
@@ -19,7 +20,7 @@
     "db_password" : "{{db.password}}",
     "db_name"     : "{{db.name}}",
     "db_driver"   : "pdo_mysql",
-
+    
     "ms_in_hour": 3600,
     "ms_in_day": 86400
 }
