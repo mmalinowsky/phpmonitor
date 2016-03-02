@@ -15,7 +15,7 @@ class Trigger
      **/
     private $notification_id;
     /**
-     * @Column(type="integer")
+     * @Column(type="string")
      **/
     private $value;
     /**
