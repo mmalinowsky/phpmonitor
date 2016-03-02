@@ -3,6 +3,7 @@ sudo: false
 language: php
 
 php:
+  - 5.4
   - 5.5
   - 5.6
   - 7.0
@@ -19,3 +20,6 @@ script:
 
 after_script:
   - if [[ "$TRAVIS_PHP_VERSION" == '5.6' ]]; then php vendor/bin/coveralls -v ; fi
+
+after_success:
+    - bash <(curl -s https://codecov.io/bash)
