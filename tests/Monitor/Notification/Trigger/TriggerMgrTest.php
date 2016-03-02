@@ -21,7 +21,8 @@ class TriggerMgrTest extends \PHPUnit_Framework_TestCase
         $notificationMgr = $this->getMockBuilder('Monitor\Notification\NotificationMgr')
             ->disableOriginalConstructor()
             ->getMock();
-
+        $notificationMgr->method('hasNotificationDelayExpired')
+            ->willreturn('true');
         $triggerRepository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
             ->disableOriginalConstructor()
             ->getMock();
@@ -45,6 +46,7 @@ class TriggerMgrTest extends \PHPUnit_Framework_TestCase
             $notificationLogService,
             new Comparator\Comparator
         );
+        $this->msDelay = 3600;
     }
 
     private function prepareTrigger($operator, $value, $serviceName, $type = 'service')
@@ -67,24 +69,24 @@ class TriggerMgrTest extends \PHPUnit_Framework_TestCase
     public function testShouldTriggerServiceBeFired()
     {
         $trigger = $this->prepareTrigger('>', 10, 'Cpu Load');
-        $serverData = ['sys_load' => 0.2, 'cpu_cores' => 1];
-        $ret = $this->triggers->shouldTriggerBeFired($trigger, $serverData, $this->serviceRepository);
+        $serverData = ['sys_load' => 0.2, 'cpu_cores' => 1, 'server_id' => 1];
+        $ret = $this->triggers->shouldTriggerBeFired($trigger, $serverData, $this->msDelay);
         $this->assertTrue($ret);
     }
 
     public function testShouldTriggerServiceBeFiredFalse()
     {
         $trigger = $this->prepareTrigger('<', 10, 'Cpu Load');
-        $serverData = ['sys_load' => 0.5, 'cpu_cores' => 1];
-        $ret = $this->triggers->shouldTriggerBeFired($trigger, $serverData, $this->serviceRepository);
+        $serverData = ['sys_load' => 0.5, 'cpu_cores' => 1, 'server_id' => 1];
+        $ret = $this->triggers->shouldTriggerBeFired($trigger, $serverData, $this->msDelay);
         $this->assertFalse($ret);
     }
 
     public function testShouldTriggersBeFiredByStructCheck()
     {
         $trigger = $this->prepareTrigger('<', 10, 'sys_load', 'struct');
-        $serverData = ['sys_load' => 9];
-        $ret = $this->triggers->shouldTriggerBeFired($trigger, $serverData, $this->serviceRepository);
+        $serverData = ['sys_load' => 9, 'server_id' => 1];
+        $ret = $this->triggers->shouldTriggerBeFired($trigger, $serverData, $this->msDelay);
         $this->assertTrue($ret);
     }
 

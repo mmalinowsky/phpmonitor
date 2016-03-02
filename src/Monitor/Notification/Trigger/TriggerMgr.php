@@ -92,8 +92,8 @@ class TriggerMgr extends Observable
     public function checkTriggers(array $serverData, $msDelay)
     {
         foreach ($this->triggers as $trigger) {
-            if ($this->shouldTriggerBeFired($trigger, $serverData)) {
-                $this->fireTrigger($trigger, $serverData, $msDelay);
+            if ($this->shouldTriggerBeFired($trigger, $serverData, $msDelay)) {
+                $this->fireTrigger($trigger, $serverData);
             }
         }
     }
@@ -104,11 +104,19 @@ class TriggerMgr extends Observable
      * @access public
      * @param  Trigger $trigger
      * @param  array   $serverData
+     * @param  int     $msDelay
      * @return boolean
      */
-    public function shouldTriggerBeFired(Trigger $trigger, array $serverData)
+    public function shouldTriggerBeFired(Trigger $trigger, array $serverData, $msDelay)
     {
         $this->checkIsComparatorValid();
+        if ( ! $this->notificationMgr->hasNotificationDelayExpired(
+            $trigger->getId(),
+            $serverData['server_id'],
+            $msDelay
+        )) {
+            return false;
+        }
         $strategy = new StrategyContext($trigger->getType());
         return $strategy->compare(
             $trigger,
@@ -140,16 +148,8 @@ class TriggerMgr extends Observable
      * @param  array   $serverData
      * @return boolean
      */
-    private function fireTrigger(Trigger $trigger, array $serverData, $msDelay)
+    private function fireTrigger(Trigger $trigger, array $serverData)
     {
-        if ( ! $this->notificationMgr->hasNotificationDelayExpired(
-            $trigger->getId(),
-            $serverData['server_id'],
-            $msDelay
-        )) {
-            return false;
-        }
-
         $notification = $this->notificationMgr->prepareNotification($trigger, $serverData);
         $this->notifyServices($notification);
         $log = new NotificationLog;
