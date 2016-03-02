@@ -31,7 +31,6 @@ class Http implements ClientInterface
      * Setting curl query
      *
      * @access public
-     * @param  string $url   api url
      * @param  array  $query
      */
     public function setQuery($query)
