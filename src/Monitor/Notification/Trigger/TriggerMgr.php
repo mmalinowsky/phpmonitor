@@ -23,7 +23,7 @@ class TriggerMgr
      */
     private $comparator;
     /**
-     * @var \Monitor\Notification\NotificationMgr
+     * @var \Monitor\Notification\Notifier
      */
     private $notifier;
     /**

@@ -82,6 +82,9 @@ class Notifier extends Observable
     {
         $notificationId = $trigger->getNotificationId();
         $notification = $this->getNotificationById($notificationId);
+        if( ! $notification) {
+            throw new \Exception('Notification not found');
+        }
         //merge server data and trigger properties so we can use them in fulfilling notification message
         $data = array_merge($serverData, $trigger->toArray());
         $this->parseNotification($notification, $data);

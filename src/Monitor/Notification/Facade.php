@@ -43,7 +43,7 @@ class Facade
                 $service = $serviceFactory->getService($observer);
                 $this->notifier->addObserver($service);
             } catch (\Exception $e) {
-                $this->notifer->popObserver();
+                $this->notifier->popObserver();
             }
         }
     }

@@ -18,6 +18,7 @@ require __DIR__.'/Bootstrap.php';
 
 $formatFactory = new FormatFactory;
 $format = $formatFactory->build($config->get('format'));
+
 $notificationLogService = new NotificationLogService(
     $entityManager,
     $config->get('notification_delay_in_hours')
