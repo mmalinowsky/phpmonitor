@@ -6,12 +6,12 @@ class HttpTest extends \PHPUnit_Framework_TestCase
     
     public function testGettingFullPath()
     {
-        $url = 'localhost/serverinfo/';
+        $query['url'] = 'localhost/serverinfo';
         $query['format']= 'json';
         $query['hostname']= 'site.com';
-        $fullUrl = $url.$query['format'].'/'.$query['hostname'];
+        $fullUrl = $query['url'].'/'.$query['format'].'/'.$query['hostname'];
         $client = new Http;
-        $methodRet = $this->invokeMethod($client, 'fullPath', [$url, $query]);
+        $methodRet = $this->invokeMethod($client, 'fullPath', [$query]);
         $this->assertSame($methodRet, $fullUrl);
     }
 

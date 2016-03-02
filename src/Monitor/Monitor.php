@@ -99,8 +99,8 @@ class Monitor
     private function checkServer(Server $serverConfig)
     {
         $this->client->setQuery(
-            $serverConfig->getUrlPath(),
             [
+                $serverConfig->getUrlPath().$this->config->get('api_request_name'),
                 'format'    => $this->config->get('format'),
                 'ping_host' => $serverConfig->getPingHostname()
             ]
