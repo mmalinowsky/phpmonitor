@@ -11,7 +11,7 @@
 
     "notification_delay_in_hours" : 1,
     "history_expire_time_in_days" : 7,
-
+    "api_request_name" : "serverinfo",
     "format" : "json",
 
     "db_hostname" : "localhost",
