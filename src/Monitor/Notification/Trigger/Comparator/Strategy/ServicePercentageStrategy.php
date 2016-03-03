@@ -28,7 +28,7 @@ class ServicePercentageStrategy implements StrategyInterface
     ) {
         $service = $serviceRepository->findOneBy(['name' => $trigger->getServiceName()]);
 
-        if ( ! $service) {
+        if (! $service) {
             //$log->error('cant find service')
             return false;
         }

@@ -17,7 +17,7 @@ class PercentageHelper
     public function getServicePercentage(array $serverData, Service $service)
     {
         list($column1, $column2) = array_pad(explode(":", $service->getDBColumns()), 2, 1);
-        if ( ! isset($serverData[$column1])
+        if (! isset($serverData[$column1])
             || ! isset($serverData[$column2])) {
             return 0;
         }

@@ -26,7 +26,7 @@ class DefaultStrategy implements StrategyInterface
         PercentageHelper $percentageHelper,
         ComparatorInterface $comparator
     ) {
-        if ( ! isset($serverData[$trigger->getServiceName()])) {
+        if (! isset($serverData[$trigger->getServiceName()])) {
             return false;
         }
 

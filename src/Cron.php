@@ -41,10 +41,10 @@ $triggerMgr = new TriggerMgr(
 );
 
 $notificationFacade = new NotificationFacade(
-        $config,
-        $triggerMgr,
-        new ServiceFactory,
-        $notifier
+    $config,
+    $triggerMgr,
+    new ServiceFactory,
+    $notifier
 );
 
 $monitor = new Monitor(

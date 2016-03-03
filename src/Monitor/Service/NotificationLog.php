@@ -73,12 +73,11 @@ class NotificationLog
             $triggerId,
             $serverId
         );
-        if ( ! $queryResult) {
+        if (! $queryResult) {
             return true;
         }
         $timeOfLastFiredUpTrigger = $queryResult[0]['created'];
         $timeDiff = $timeOfLastFiredUpTrigger - time();
         return ($this->notificationDelayInHours * $msDelay + $timeDiff >= 0) ? false : true;
     }
-
 }

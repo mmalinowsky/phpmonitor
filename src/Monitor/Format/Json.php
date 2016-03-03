@@ -15,7 +15,7 @@ class Json implements FormatInterface
     public function convertToArray($data)
     {
         $array = json_decode($data, true);
-        if ( ! is_array($array)) {
+        if (! is_array($array)) {
             $array = [];
         }
         return $array;
